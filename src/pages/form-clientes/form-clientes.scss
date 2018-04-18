@@ -1,0 +1,38 @@
+page-form-clientes {
+
+       
+    .input-cover{
+        width: 0%;
+    }
+    .input-select{
+        width: 30%;
+    }
+
+    .fab {
+        contain: layout !important;
+    }
+    
+    button[ion-fab] {
+        overflow: visible;
+        position: relative;
+        ion-label {
+            position: absolute;
+            top: -8px;
+            right: 40px;
+            color: white;
+            background-color: rgba(0,0,0,0.7);
+            line-height: 24px;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+    }
+    #ListBackdrop{
+        background-color:white !important;
+        position: fixed !important;
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+        opacity: 0.8
+     }
+        
+}

@@ -1,0 +1,136 @@
+<!--
+  Generated template for the DetallePrestamoPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Detalle de Prestamos</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+
+
+  <div id="todo">
+    <div id="detalle">
+      <ion-item-divider color="secondary">
+        Detalle de prestamo {{prestamo.numeroPrestamo}}
+      </ion-item-divider>
+      <ion-card>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col col-6>
+                <label>Tasa:</label>
+                <span class=" ">{{prestamo.tasa}}%</span>
+              </ion-col>
+              <ion-col col-6>
+                <span class=" ">{{prestamo.cliente}}%</span>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col col-6>
+                <label>Capital prestano:</label>
+                <span class=" ">{{prestamo.capitalPrestado|currency}}</span>
+              </ion-col>
+              <ion-col col-6>
+                <label>Cantidad de cuotas:</label>
+                <span class=" ">{{prestamo.cantidadCuotas}}</span>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col col-6>
+                <label>Monto cuotas:</label>
+                <span class=" ">{{prestamo.montoCuotas|currency}}</span>
+              </ion-col>
+              <ion-col col-6>
+                <label>Fecha apertura:</label>
+                <span class=" ">{{prestamo.fechaInicio|date}}</span>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col col-6>
+                <label>Fecha Proximo pago:</label>
+                <span class=" ">{{prestamo.fechaProximoPago|date}}</span>
+              </ion-col>
+              <ion-col col-6>
+                <label>Capital pendiente:</label>
+                <span class=" ">{{prestamo.capitalPendiente|currency}}</span>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col col-6>
+                <label>Monto atraso:</label>
+                <span class=" ">{{montoAtraso|currency}}</span>
+              </ion-col>
+              <ion-col col-6>
+                <label>Pagado capital:</label>
+                <span class=" ">{{prestamo.pagadoCapital|currency}}</span>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+
+              <ion-col col-6>
+                <label>Notas</label>
+                <span class=" ">{{notas}}</span>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+
+      </ion-card>
+    </div>
+
+    <div id="movimientos">
+      <ion-item-divider color="secondary">
+        Movimientos
+
+      </ion-item-divider>
+      <ion-card>
+        <movimientos-por-prestamo [prestamo]="prestamo"></movimientos-por-prestamo>
+      </ion-card>
+      <ion-item-divider color="secondary">
+        Amortizacion
+      </ion-item-divider>
+      <ion-card>
+        <tabla-amortizacion [prestamo]="prestamo"></tabla-amortizacion>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>
+
+<!-- Real floating action button, fixed. It will not scroll with the content -->
+
+<div id="ListBackdrop" *ngIf="fabIsOpen" (click)="cerrarBackDrop()"></div>
+
+<ion-fab right bottom #fab>
+
+  <button ion-fab color="primary" (click)="this.fabIsOpen = !this.fabIsOpen">
+    <ion-icon name="arrow-dropup"></ion-icon>
+  </button>
+  <ion-fab-list side="top">
+    <button ion-fab color="secondary" (click)="abrirEditarPrestamo()">
+      <ion-icon name="create"></ion-icon>
+    </button>
+    <button ion-fab color="secondary" (click)="imprimir('todo')">
+      <ion-label>Todo</ion-label>
+      <ion-icon name="cloud-download"></ion-icon>
+    </button>
+    <button ion-fab clear color="secondary" (click)="imprimir('movimientos')">
+      <ion-label>Movimientos</ion-label>
+      <ion-icon name="cloud-download"></ion-icon>
+    </button>
+    <button ion-fab (click)="imprimir('detalle')" color="secondary">
+      <ion-label>Detalle</ion-label>
+      <ion-icon name="cloud-download"></ion-icon>
+
+    </button>
+
+  </ion-fab-list>
+</ion-fab>
