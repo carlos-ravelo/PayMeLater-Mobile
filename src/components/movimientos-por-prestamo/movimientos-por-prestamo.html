@@ -1,0 +1,29 @@
+<!-- Generated template for the MovimientosPorPrestamoComponent component -->
+
+<ion-list>
+  <div *ngFor="let movimiento of listaMovimientos">
+    <button ion-item (click)="abrirModificarMovimiento()">
+      <p>
+        <b>Tipo:</b> {{ movimiento.tipoMovimiento}} </p>
+      <p>
+        <b>Interes:</b> {{movimiento.interesDelPago|currency}}</p>
+      <p>
+        <b>Fecha Transaccion: </b>
+      </p>
+      <p>
+        <b>Fecha Correspondiente: </b>
+      </p>
+      <br>
+      <div class="item-note" item-end>
+        <p>
+          <b>Prestado:</b> {{movimiento.montoPrestado|currency}}</p>
+        <p>
+          <b> Capital:</b> {{movimiento.interesDelPago|currency}}</p>
+        <p>{{movimiento.fechaTransaccion|date}}</p>
+        <p>{{movimiento.fechaCorrespondiente|date}}</p>
+        <br>
+      </div>
+    </button>
+
+  </div>
+</ion-list>
