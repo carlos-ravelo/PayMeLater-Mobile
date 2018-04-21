@@ -6,13 +6,58 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>formPrestamos</ion-title>
+  <ion-navbar color="primary">
+    <ion-title>Agregar Prestamo</ion-title>
   </ion-navbar>
-
 </ion-header>
-
-
 <ion-content padding>
-
+  <ion-item> Numero de Prestamo
+    <ion-note item-end>{{prestamo.numeroPrestamo}}</ion-note>
+  </ion-item>
+  <ion-item>
+    <ion-label>Cliente</ion-label>
+    <ion-select name="tipo" placeholder="Seleccione" [(ngModel)]="prestamo.cliente">
+      <ion-option *ngFor="let cliente of listaCliente">{{cliente.nombre}}</ion-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label>Capital prestado</ion-label>
+    <ion-input text-right type="number" [(ngModel)]="prestamo.capitalPrestado" name="capitalPrestado" (blur)="calcularMontoCuota()"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Tasa</ion-label>
+    <ion-input text-right (blur)="calcularMontoCuota()" type="number" placeholder="Tasa" name="tasa" [(ngModel)]="prestamo.tasa"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Tipo Tasa</ion-label>
+    <ion-select name="tipo" [(ngModel)]="prestamo.tipoTasa">
+      <ion-option>Mensual</ion-option>
+      <ion-option>Anual</ion-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label>Cantidad de cuotas</ion-label>
+    <ion-input text-right (blur)="calcularMontoCuota()" type="number" placeholder="" name="cantidadCuotas" [(ngModel)]="prestamo.cantidadCuotas"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Monto de cuotas</ion-label>
+    <ion-input text-right (blur)="calcularMontoCuota()" type="number" placeholder="" name="MomntoCuotas" [(ngModel)]="prestamo.montoCuotas"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Fecha de inicio</ion-label>
+    <ion-datetime displayFormat="MMM DD, YYYY" [(ngModel)]="prestamo.fechaInicio"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label>Fecha primer pago</ion-label>
+    <ion-datetime displayFormat="MMM DD, YYYY" (dateChange)="prestamo.fechaProximoPago=formatFecha($event)" [(ngModel)]="prestamo.fechaProximoPago"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label>Notas</ion-label>
+    <ion-input text-right [(ngModel)]="prestamo.Notas"></ion-input>
+  </ion-item>
+  <ion-fab right bottom #fab>
+    <button ion-fab (click)="crearPrestamo()" color="secondary">
+      <ion-icon name="done-all"></ion-icon>
+    </button>
+  </ion-fab>
 </ion-content>

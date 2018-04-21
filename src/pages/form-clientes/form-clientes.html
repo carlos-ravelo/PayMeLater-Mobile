@@ -27,7 +27,6 @@
       <ion-icon name="arrow-dropup"></ion-icon>
     </button>
     <ion-fab-list side="top">
-
       <button ion-fab clear color="warning" (click)="seleccionarContacto()">
         <ion-label>Desde contactos</ion-label>
         <ion-icon name="contact"></ion-icon>
@@ -35,11 +34,10 @@
       <button ion-fab (click)="crearCliente()" color="secondary">
         <ion-label>Guardar</ion-label>
         <ion-icon name="person-add"></ion-icon>
-
       </button>
-
     </ion-fab-list>
   </ion-fab>
+
   <ion-item>
     <ion-label>Nombre</ion-label>
     <ion-input type="text" [(ngModel)]="cliente.nombre" name="title"></ion-input>
@@ -61,7 +59,6 @@
   <ion-item-divider color="light">
     Cuentas Bancarias
   </ion-item-divider>
-
   <ion-item *ngFor="let cuenta of cliente.cuentas;index as i;trackBy:identify">
     <ion-select class="input-select" item-start placeholder="Banco" name="banco" [(ngModel)]="cuenta.banco">
       <ion-option>Popular</ion-option>

@@ -27,45 +27,31 @@ export class ListaPrestamosPage implements OnInit {
   ionViewDidLoad() {
     console.log('ionViewDidLoad ListaPrestamosPage');
   }
-  ngOnInit() {
-    // this.ObtenerPrestamos();
+  ngOnInit() {    // this.ObtenerPrestamos();
 
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.data.obtenerPrestamos().subscribe(listaPrestamos => {
-
       this.listaPrestamos = listaPrestamos;
-
     });
 
   }
 
-  ObtenerPrestamos(): void {
-    this.data.obtenerPrestamos().subscribe(listaPrestamos => {
-
-      this.listaPrestamos = listaPrestamos;
-      console.log(listaPrestamos)
-
-    });
-  }
-
-
-  irDetallePrestamo(event, prestamo) {
+  irDetallePrestamo = (event, prestamo) => {
     // That's right, we're pushing to ourselves!
     console.log(prestamo)
     this.navCtrl.push(DetallePrestamoPage, {
       prestamo
     });
   }
-
-  estaEnAtraso(fecha) {
+  estaEnAtraso = (fecha) => {
     return new Date(fecha) <= new Date()
   }
 
-  abrirInsertarPrestamo() {
+  abrirInsertarPrestamo = () => {
     this.navCtrl.push(FormPrestamosPage, );
-
   }
+
 }
 
 

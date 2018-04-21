@@ -12,20 +12,12 @@
     <ion-title>PayMeLater</ion-title>
   </ion-navbar>
 </ion-header>
-
 <ion-content padding>
-
-
   <ion-fab right bottom>
     <button ion-fab (click)="abrirInsertarPrestamo()">
       <ion-icon name="add"></ion-icon>
     </button>
   </ion-fab>
-  <!--   <ion-card>
- -->
-  <!--   <ion-item-divider color="secondary">
-    Lista
-  </ion-item-divider> -->
   <ion-list>
     <button ion-item *ngFor="let prestamo of listaPrestamos" (click)="irDetallePrestamo($event,prestamo)">
       <ion-icon name="cash" color="secondary"></ion-icon>
@@ -40,6 +32,4 @@
       </div>
     </button>
   </ion-list>
-  <!--   </ion-card>
- -->
 </ion-content>

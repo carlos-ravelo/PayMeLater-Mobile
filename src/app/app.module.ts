@@ -18,7 +18,7 @@ import { ListaClientesPageModule } from '../pages/lista-clientes/lista-clientes.
 import { DetalleClientePageModule } from '../pages/detalle-cliente/detalle-cliente.module'
 import { FormClientesPageModule } from '../pages/form-clientes/form-clientes.module'
 import { FormPrestamosPageModule } from '../pages/form-prestamos/form-prestamos.module'
-import { FormMovimientosPageModule } from '../pages/form-movimientos/form-movimientos.module'
+import { FormMovimientoPageModule } from '../pages/form-movimiento/form-movimiento.module'
 
 import { EditarClientePageModule } from '../pages/editar-cliente/editar-cliente.module'
 import { EditarMovimientoPageModule } from '../pages/editar-movimiento/editar-movimiento.module'
@@ -52,6 +52,8 @@ import { BackgroundMode } from '@ionic-native/background-mode';
 import { Contacts } from '@ionic-native/contacts'
 import { SocialSharing } from '@ionic-native/social-sharing'
 import { EmailComposer } from '@ionic-native/email-composer'
+import { DatePipe } from '@angular/common';
+
 
 @NgModule({
   declarations: [
@@ -71,7 +73,7 @@ import { EmailComposer } from '@ionic-native/email-composer'
     DetalleClientePageModule,
     FormClientesPageModule,
     FormPrestamosPageModule,
-    FormMovimientosPageModule,
+    FormMovimientoPageModule,
     EditarClientePageModule,
     EditarMovimientoPageModule,
     EditarPrestamoPageModule
@@ -93,7 +95,7 @@ import { EmailComposer } from '@ionic-native/email-composer'
     Clipboard,
     CallNumber,
     BackgroundMode,
-    Contacts, SocialSharing, EmailComposer
+    Contacts, SocialSharing, EmailComposer, DatePipe
   ]
 })
 export class AppModule { }

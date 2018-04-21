@@ -1,0 +1,59 @@
+<!--
+  Generated template for the FormMovimientoPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>Insertar Movimiento</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-item> Numero de Prestamo {{prestamo.numeroPrestamo}}</ion-item>
+  <ion-item> Cliente {{prestamo.cliente}}</ion-item>
+  <ion-item>
+    <ion-label>Tipo de movimiento</ion-label>
+    <ion-select [(ngModel)]="movimiento.tipoMovimiento" (change)="cambioTipoMovimiento()" name="tipoMovimiento">
+      <ion-option value="pago">Pago</ion-option>
+      <ion-option value="desembolso">Desembolso</ion-option>
+    </ion-select>
+  </ion-item>
+  <ion-item *ngIf="movimiento.tipoMovimiento=='desembolso'">
+    <ion-label>Monto prestado</ion-label>
+    <ion-input text-right type="number" name="montoPrestado" [(ngModel)]="movimiento.montoPrestado"></ion-input>
+  </ion-item>
+  <ion-item *ngIf="movimiento.tipoMovimiento=='pago'">
+    <ion-label>Interes del Pago</ion-label>
+    <ion-input text-right type="number" name="interesDelPago" [(ngModel)]="movimiento.interesDelPago"></ion-input>
+  </ion-item>
+  <ion-item *ngIf="movimiento.tipoMovimiento=='pago'">
+    <ion-label>Capital del Pago</ion-label>
+    <ion-input text-right type="number" name="CapitalDelPago" [(ngModel)]="movimiento.capitalDelPago"></ion-input>
+  </ion-item>
+  <ion-item *ngIf="movimiento.tipoMovimiento=='pago'">
+    <ion-label>Monto total</ion-label>
+    <ion-label text-right disabled>{{movimiento.interesDelPago+movimiento.capitalDelPago|currency}}</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>Fecha correspondiente</ion-label>
+    <ion-datetime displayFormat="MMM DD, YYYY" [(ngModel)]="movimiento.fechaCorrespondiente"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label>Fecha transaccion</ion-label>
+    <ion-datetime displayFormat="MMM DD, YYYY" [(ngModel)]="movimiento.fechaTransaccion"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label name="notas">notas</ion-label>
+    <ion-input text-right [(ngModel)]="movimiento.notas"></ion-input>
+  </ion-item>
+  <ion-fab right bottom #fab>
+    <button ion-fab (click)="insertarMovimiento()" color="secondary">
+      <ion-icon name="done-all"></ion-icon>
+    </button>
+  </ion-fab>
+</ion-content>

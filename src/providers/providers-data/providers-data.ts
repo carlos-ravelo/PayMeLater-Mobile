@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 
 //Angular Fire
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Cliente } from '../../clases/cliente'
 import { Prestamo } from '../../clases/prestamo'
 import { Movimiento } from '../../clases/movimiento'
@@ -20,9 +20,6 @@ export class ProvidersDataProvider {
   private clientesCollection: AngularFirestoreCollection<Cliente>;
   private prestamosCollection: AngularFirestoreCollection<Prestamo>;
   private movimientosCollection: AngularFirestoreCollection<Movimiento>;
-  private clienteDoc: AngularFirestoreDocument<Cliente>;
-  private prestamoDoc: AngularFirestoreDocument<Prestamo>;
-  private MovimientoDoc: AngularFirestoreDocument<Movimiento>;
 
   constructor(public db: AngularFirestore, public afAuth: AngularFireAuth) {
     console.log('Hello ProvidersDataProvider Provider');
@@ -132,8 +129,7 @@ export class ProvidersDataProvider {
   //Borra un cliente
   borrarCliente(cliente: Cliente) {
 
-    this.clienteDoc = this.clientesCollection.doc(cliente.id);
-    this.clienteDoc.delete();
+    this.clientesCollection.doc(cliente.id).delete();
     console.log("se borro un cliente");
   }
 
