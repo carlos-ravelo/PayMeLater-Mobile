@@ -5,6 +5,10 @@ import { FuncionesComunesProvider } from '../../providers/funciones-comunes/func
 import * as moment from 'moment';
 import { FabContainer } from 'ionic-angular';
 import { EditarPrestamoPage } from '../../pages/editar-prestamo/editar-prestamo';
+import { ProvidersDataProvider } from '../../providers/providers-data/providers-data'
+import { FormMovimientoPage } from '../../pages/form-movimiento/form-movimiento';
+import { ActionSheetController } from 'ionic-angular'
+import { AlertController } from 'ionic-angular';
 
 
 
@@ -27,8 +31,8 @@ export class DetallePrestamoPage {
   montoAtraso: Number;
   fabIsOpen: boolean = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
-    private funcionesComunes: FuncionesComunesProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public actionSheetCtrl: ActionSheetController,
+    private funcionesComunes: FuncionesComunesProvider, public data: ProvidersDataProvider, public alertCtrl: AlertController) {
     this.prestamo = navParams.get('prestamo');
   }
 
@@ -62,7 +66,7 @@ export class DetallePrestamoPage {
   }
   imprimir = (divToPrint) => {
     this.funcionesComunes.imprimir(divToPrint);
-    this.cerrarBackDrop;
+    this.cerrarBackDrop();
   }
 
 
@@ -76,4 +80,73 @@ export class DetallePrestamoPage {
       this.prestamo);
 
   }
+
+  borrarPrestamo() {
+    this.data.borrarPrestamo(this.prestamo);
+    this.data.borrarMovimientosPorPrestamo(this.prestamo);
+    this.navCtrl.pop();
+
+  }
+  abrirIsnertarMovimientos() {
+    this.navCtrl.push(FormMovimientoPage,
+      { prestamo: this.prestamo, tipoMovimiento: "pago" });
+  }
+
+  presentPrintActionSheet() {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Print a section',
+      buttons: [
+        {
+          text: 'Detalle',
+          handler: () => {
+            this.imprimir('detalle');
+          }
+        },
+        {
+          text: 'Todo',
+          handler: () => {
+            this.imprimir('todo');
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Movimientos',
+          handler: () => {
+            this.imprimir('movimientos');
+          }
+        }
+      ]
+    });
+
+    actionSheet.present();
+  }
+
+  ShowconfirmDelete() {
+    let confirm = this.alertCtrl.create({
+      title: 'Eliminar el prestamo?',
+      message: 'Esta seguro que desea eliminar el prestamo y todos los movimientos asociados?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          handler: () => {
+            confirm.dismiss();
+          }
+        },
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.borrarPrestamo();
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+
+
 }

@@ -46,5 +46,7 @@ export class ListaClientesPage {
   abrirInsertarCliente() {
     this.navCtrl.push(FormClientesPage, );
   }
-
+  swipe() {
+    console.log("swiped")
+  }
 }

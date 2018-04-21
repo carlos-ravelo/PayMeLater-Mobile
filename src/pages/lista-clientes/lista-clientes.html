@@ -9,24 +9,16 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Lista de clientes</ion-title>
+    <ion-title>PayMeLater</ion-title>
   </ion-navbar>
 </ion-header>
-
-
-<ion-content padding>
-
+<ion-content padding (swipeEvent)="swipe()">
   <ion-fab right bottom>
     <button ion-fab (click)="abrirInsertarCliente()">
       <ion-icon name="add"></ion-icon>
     </button>
   </ion-fab>
-  <!--   <ion-card>
-    <ion-item-divider color="secondary">
-      Lista
-    </ion-item-divider>
-     -->
-  <ion-list inset>
+  <ion-list>
     <button detail-push ion-item *ngFor="let cliente of listaClientes" (click)="irDetalleCliente($event,cliente)">
       <ion-avatar item-start>
         <img src="assets/imgs/contact.png" alt="">
@@ -34,6 +26,4 @@
       <p>{{cliente?.nombre}}</p>
     </button>
   </ion-list>
-  <!--   </ion-card>
- -->
 </ion-content>

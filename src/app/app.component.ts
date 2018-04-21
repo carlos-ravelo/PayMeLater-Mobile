@@ -3,19 +3,16 @@ import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { AngularFireAuth } from 'angularfire2/auth';
-import * as firebase from 'firebase/app';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { LoginPage } from '../pages/login/login';
 import { ListaPrestamosPage } from '../pages/lista-prestamos/lista-prestamos';
 import { ListaClientesPage } from '../pages/lista-clientes/lista-clientes';
-
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
-  rootPage: any = LoginPage;
   pages: Array<{ title: string, component: any }>;
 
 
@@ -35,21 +32,17 @@ export class MyApp {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       this.backgroundMode.enable();
-
-      this.afAuth.auth.onAuthStateChanged(((a: firebase.User) => {
-
+      this.afAuth.authState.subscribe((a) => {
         if (a) {
-          this.nav.setRoot(ListaClientesPage)
+          this.nav.setRoot(ListaPrestamosPage)
         }
         else if (!a) {
           this.nav.setRoot(LoginPage)
         }
-      }));
+      })
     });
   }
 
@@ -59,9 +52,6 @@ export class MyApp {
     this.nav.setRoot(page.component);
   }
   logout() {
-    this.nav.setRoot(LoginPage);
-
     this.afAuth.auth.signOut();
-
   }
 }

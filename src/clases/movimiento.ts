@@ -1,6 +1,5 @@
 export class Movimiento {
     constructor(
-        public id: string,
         public numeroPrestamo,
         public cliente: string,
         public tipoMovimiento: string,
@@ -11,6 +10,8 @@ export class Movimiento {
         public fechaCorrespondiente: any,
         public fechaTransaccion: any,
         public notas: string,
+        public id?: string,
+
 
     ) { }
 }

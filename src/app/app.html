@@ -1,6 +1,6 @@
 <ion-menu [content]="content">
   <ion-header>
-    <ion-toolbar>
+    <ion-toolbar color="secondary">
       <ion-title>Menu</ion-title>
     </ion-toolbar>
   </ion-header>
@@ -17,4 +17,8 @@
 </ion-menu>
 
 <!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
-<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>
+<ion-nav #content swipeBackEnabled="false"></ion-nav>
+<!-- <ion-tabs tabsPlacement="bottom" color="light" tabsHighlight="true">
+  <ion-tab [root]="rootPage" tabTitle="Clientes" tabIcon="chat"></ion-tab>
+  <ion-tab [root]="pages[1].component" tabTitle="Prestamos" tabIcon="chat"></ion-tab>
+</ion-tabs> -->

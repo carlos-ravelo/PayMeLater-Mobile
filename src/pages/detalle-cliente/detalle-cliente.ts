@@ -55,7 +55,6 @@ export class DetalleClientePage {
       { cliente: this.cliente });
   }
   borrarCliente() {
-    debugger
     this.db.borrarCliente(this.cliente);
     this.navCtrl.pop();
     this.funcionesComunes.presentToast(`Se Borro el Cliente ${this.cliente.nombre}`, 3000, "")
