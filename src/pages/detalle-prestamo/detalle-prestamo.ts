@@ -4,12 +4,11 @@ import { Prestamo } from '../../clases/prestamo';
 import { FuncionesComunesProvider } from '../../providers/funciones-comunes/funciones-comunes'
 import * as moment from 'moment';
 import { FabContainer } from 'ionic-angular';
-import { EditarPrestamoPage } from '../../pages/editar-prestamo/editar-prestamo';
 import { ProvidersDataProvider } from '../../providers/providers-data/providers-data'
 import { FormMovimientoPage } from '../../pages/form-movimiento/form-movimiento';
 import { ActionSheetController } from 'ionic-angular'
 import { AlertController } from 'ionic-angular';
-
+import { FormPrestamosPage } from '../form-prestamos/form-prestamos'
 
 
 
@@ -30,7 +29,6 @@ export class DetallePrestamoPage {
   prestamo: Prestamo;
   montoAtraso: Number;
   fabIsOpen: boolean = false;
-
   constructor(public navCtrl: NavController, public navParams: NavParams, public actionSheetCtrl: ActionSheetController,
     private funcionesComunes: FuncionesComunesProvider, public data: ProvidersDataProvider, public alertCtrl: AlertController) {
     this.prestamo = navParams.get('prestamo');
@@ -58,11 +56,14 @@ export class DetallePrestamoPage {
     let fechaProximoPago = moment(this.prestamo.fechaProximoPago);
     let hoy = moment();
     let diferencia = 0;
+
     while (fechaProximoPago < hoy) {
       fechaProximoPago.add(1, 'month')
       diferencia++;
     }
-    this.montoAtraso = diferencia * this.prestamo.capitalPendiente * this.prestamo.tasa / 100 / 12;
+    let montlyOrAnualyRate = this.prestamo.tipoTasa == "Anual" ? 1 : 12;
+    let tasaAnualizada = montlyOrAnualyRate * this.prestamo.tasa;
+    this.montoAtraso = diferencia * this.prestamo.capitalPendiente * tasaAnualizada / 100 / 12;
   }
   imprimir = (divToPrint) => {
     this.funcionesComunes.imprimir(divToPrint);
@@ -76,9 +77,9 @@ export class DetallePrestamoPage {
   }
 
   abrirEditarPrestamo() {
-    this.navCtrl.push(EditarPrestamoPage,
-      this.prestamo);
-
+    this.navCtrl.push(FormPrestamosPage,
+      { prestamo: this.prestamo });
+    this.cerrarBackDrop();
   }
 
   borrarPrestamo() {
@@ -87,9 +88,11 @@ export class DetallePrestamoPage {
     this.navCtrl.pop();
 
   }
-  abrirIsnertarMovimientos() {
+  abrirIsnertarMovimientos(tipoMovimiento) {
     this.navCtrl.push(FormMovimientoPage,
-      { prestamo: this.prestamo, tipoMovimiento: "pago" });
+      { prestamo: this.prestamo, tipoMovimiento: tipoMovimiento });
+    this.cerrarBackDrop();
+
   }
 
   presentPrintActionSheet() {
@@ -133,8 +136,8 @@ export class DetallePrestamoPage {
       buttons: [
         {
           text: 'Cancelar',
+          role: "cancel",
           handler: () => {
-            confirm.dismiss();
           }
         },
         {

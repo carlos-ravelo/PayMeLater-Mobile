@@ -35,56 +35,70 @@
           <ion-row>
             <ion-col col-6>
               <label>Tasa:</label>
-              <span class=" ">{{prestamo.tasa}}%</span>
+              <span class=" ">{{prestamo.tasa}}% {{prestamo.tipoTasa}}</span>
             </ion-col>
             <ion-col col-6>
-              <span class=" ">{{prestamo.cliente}}%</span>
+              <span class=" ">{{prestamo.cliente}}</span>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col col-6>
-              <label>Capital prestano:</label>
+              <label>Capital prestado:</label>
+              <br>
               <span class=" ">{{prestamo.capitalPrestado|currency}}</span>
             </ion-col>
             <ion-col col-6>
               <label>Cantidad de cuotas:</label>
+              <br>
               <span class=" ">{{prestamo.cantidadCuotas}}</span>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col col-6>
               <label>Monto cuotas:</label>
+              <br>
               <span class=" ">{{prestamo.montoCuotas|currency}}</span>
             </ion-col>
             <ion-col col-6>
               <label>Fecha apertura:</label>
+              <br>
               <span class=" ">{{prestamo.fechaInicio|date}}</span>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col col-6>
               <label>Fecha Proximo pago:</label>
+              <br>
               <span class=" ">{{prestamo.fechaProximoPago|date}}</span>
             </ion-col>
             <ion-col col-6>
               <label>Capital pendiente:</label>
+              <br>
               <span class=" ">{{prestamo.capitalPendiente|currency}}</span>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col col-6>
               <label>Monto atraso:</label>
+              <br>
               <span class=" ">{{montoAtraso|currency}}</span>
             </ion-col>
             <ion-col col-6>
               <label>Pagado capital:</label>
+              <br>
               <span class=" ">{{prestamo.pagadoCapital|currency}}</span>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col col-6>
               <label>Notas</label>
+              <br>
               <span class=" ">{{notas}}</span>
+            </ion-col>
+            <ion-col col-6>
+              <label>Prox. Interes</label>
+              <br>
+              <span class=" ">{{prestamo.capitalPendiente*prestamo.tasa/100|currency}}</span>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -112,22 +126,28 @@
       <ion-icon name="arrow-dropup"></ion-icon>
     </button>
     <ion-fab-list side="top">
-      <button ion-fab (click)="abrirIsnertarMovimientos()">
-        <ion-label>Insertar Movimiento</ion-label>
-        <ion-icon color="secondary" name="add"></ion-icon>
+      <button ion-fab (click)="abrirIsnertarMovimientos('desembolso')">
+        <ion-label>Insertar Desembolso</ion-label>
+        <ion-icon color="dark" name="trending-down"></ion-icon>
+      </button>
+      <button ion-fab (click)="abrirIsnertarMovimientos('pago')">
+        <ion-label>Insertar Pago</ion-label>
+        <ion-icon color="secondary" name="trending-up"></ion-icon>
       </button>
       <button ion-fab color="light" (click)="presentPrintActionSheet()">
         <ion-label>Descargar</ion-label>
-        <ion-icon name="cloud-download" color="primary"></ion-icon>
+        <ion-icon name="cloud-download" color="dark"></ion-icon>
       </button>
       <button ion-fab (click)="ShowconfirmDelete()">
         <ion-label>Borrar prestamo</ion-label>
         <ion-icon color="dark" name="trash"></ion-icon>
       </button>
+      <button ion-fab (click)="abrirEditarPrestamo()">
+        <ion-label>Editar prestamo</ion-label>
+        <ion-icon color="dark" name="create"></ion-icon>
+      </button>
     </ion-fab-list>
   </ion-fab>
 </ion-content>
-
 <!-- Real floating action button, fixed. It will not scroll with the content -->
-
 <div id="ListBackdrop" *ngIf="fabIsOpen" (click)="cerrarBackDrop()"></div>

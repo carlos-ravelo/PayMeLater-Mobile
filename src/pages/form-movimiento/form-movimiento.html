@@ -7,33 +7,39 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-title>Insertar Movimiento</ion-title>
+
+    <ion-title>{{modificarOnuevo}} Movimiento</ion-title>
+    <ion-buttons end>
+      <button ion-button *ngIf="movimiento.id" (click)="borrarMovimiento()" icon-only>
+        <ion-icon name="trash"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
-
-
 <ion-content padding>
   <ion-item> Numero de Prestamo {{prestamo.numeroPrestamo}}</ion-item>
   <ion-item> Cliente {{prestamo.cliente}}</ion-item>
   <ion-item>
     <ion-label>Tipo de movimiento</ion-label>
     <ion-select [(ngModel)]="movimiento.tipoMovimiento" (change)="cambioTipoMovimiento()" name="tipoMovimiento">
-      <ion-option value="pago">Pago</ion-option>
-      <ion-option value="desembolso">Desembolso</ion-option>
+      <ion-option value="{{tipo}}" *ngFor="let tipo of tiposDeMovimiento">{{tipo}}</ion-option>
     </ion-select>
   </ion-item>
-  <ion-item *ngIf="movimiento.tipoMovimiento=='desembolso'">
+  <ion-item *ngIf="movimiento.tipoMovimiento=='desembolso'||movimiento.tipoMovimiento=='inicial'">
     <ion-label>Monto prestado</ion-label>
-    <ion-input text-right type="number" name="montoPrestado" [(ngModel)]="movimiento.montoPrestado"></ion-input>
+    <ion-input text-right type="number" (ngModelChange)="movimiento.montoPrestado = convertToNumber($event)" name="montoPrestado"
+      [ngModel]="movimiento.montoPrestado"></ion-input>
   </ion-item>
   <ion-item *ngIf="movimiento.tipoMovimiento=='pago'">
     <ion-label>Interes del Pago</ion-label>
-    <ion-input text-right type="number" name="interesDelPago" [(ngModel)]="movimiento.interesDelPago"></ion-input>
+    <ion-input (ngModelChange)="movimiento.interesDelPago = convertToNumber($event)" (blur)="calcularMontoTotal()" text-right
+      type="number" name="interesDelPago" [ngModel]="movimiento.interesDelPago"></ion-input>
   </ion-item>
   <ion-item *ngIf="movimiento.tipoMovimiento=='pago'">
     <ion-label>Capital del Pago</ion-label>
-    <ion-input text-right type="number" name="CapitalDelPago" [(ngModel)]="movimiento.capitalDelPago"></ion-input>
+    <ion-input (ngModelChange)="movimiento.capitalDelPago = convertToNumber($event)" (blur)="calcularMontoTotal()" text-right
+      type="number" name="CapitalDelPago" [ngModel]="movimiento.capitalDelPago"></ion-input>
   </ion-item>
   <ion-item *ngIf="movimiento.tipoMovimiento=='pago'">
     <ion-label>Monto total</ion-label>

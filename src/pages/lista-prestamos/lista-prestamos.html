@@ -18,6 +18,12 @@
       <ion-icon name="add"></ion-icon>
     </button>
   </ion-fab>
+  <ion-card color="warning" *ngIf="thereIsNoLoanWarning">
+    <ion-card-content (click)="abrirInsertarPrestamo()">
+      No tiene Prestamos a Visualizar, haga click para agregar
+    </ion-card-content>
+  </ion-card>
+
   <ion-list>
     <button ion-item *ngFor="let prestamo of listaPrestamos" (click)="irDetallePrestamo($event,prestamo)">
       <ion-icon name="cash" color="secondary"></ion-icon>

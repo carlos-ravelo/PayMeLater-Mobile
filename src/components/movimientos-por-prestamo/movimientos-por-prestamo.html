@@ -2,7 +2,7 @@
 
 <ion-list>
   <div *ngFor="let movimiento of listaMovimientos">
-    <button ion-item (click)="abrirModificarMovimiento()">
+    <button ion-item (click)="abrirModificarMovimiento(movimiento)">
       <p>
         <b>Tipo:</b> {{ movimiento.tipoMovimiento}} </p>
       <p>
@@ -18,7 +18,7 @@
         <p>
           <b>Prestado:</b> {{movimiento.montoPrestado|currency}}</p>
         <p>
-          <b> Capital:</b> {{movimiento.interesDelPago|currency}}</p>
+          <b> Capital:</b> {{movimiento.capitalDelPago|currency}}</p>
         <p>{{movimiento.fechaTransaccion|date}}</p>
         <p>{{movimiento.fechaCorrespondiente|date}}</p>
         <br>

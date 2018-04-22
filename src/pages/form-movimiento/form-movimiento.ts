@@ -21,18 +21,23 @@ import * as moment from 'moment'
 })
 export class FormMovimientoPage {
   prestamo: Prestamo;
-  tipoMovimiento: string;
   movimiento: Movimiento;
   errorMontoPrestado: boolean
   errorInteresOCapital: boolean;
-
+  tiposDeMovimiento: string[];
+  modificarOnuevo: string;
   constructor(private datePipe: DatePipe, public data: ProvidersDataProvider, public navCtrl: NavController, public navParams: NavParams, public funcionesComunes: FuncionesComunesProvider) {
   }
-
+  ngOnInit() {
+    this.prestamo = this.navParams.get("prestamo");
+    if (this.navParams.get("movimiento")) { this.movimiento = { ... this.navParams.get("movimiento") } }
+    else { this.clear() };
+    this.tiposDeMovimiento = this.movimiento.tipoMovimiento == "inicial" ? ["inicial"] : ["pago", "desembolso"];
+    this.modificarOnuevo = this.movimiento.id ? "Modificar" : "Insertar nuevo"
+  }
   ionViewDidLoad() {
     console.log('ionViewDidLoad FormMovimientoPage');
   }
-
   clear() {
     this.movimiento = {
       numeroPrestamo: this.prestamo.numeroPrestamo,
@@ -45,49 +50,35 @@ export class FormMovimientoPage {
       interesDelPago: 0,
       capitalDelPago: 0,
       montoPrestado: 0
-
     }
     if (this.movimiento.tipoMovimiento == 'pago') {
-      this.movimiento.interesDelPago = this.round(this.prestamo.capitalPendiente * this.prestamo.tasa / 100 / 12, 2)
-      this.movimiento.capitalDelPago = this.round(this.prestamo.montoCuotas - this.movimiento.interesDelPago, 2);
+      this.movimiento.interesDelPago = this.funcionesComunes.round(this.prestamo.capitalPendiente * (this.prestamo.tipoTasa == "Anual" ? 1 : 12) * this.prestamo.tasa / 100 / 12, 2)
+      this.movimiento.capitalDelPago = this.funcionesComunes.round(this.prestamo.montoCuotas - this.movimiento.interesDelPago, 2);
     }
   }
 
 
-  round(value, precision) {
-    var multiplier = Math.pow(10, precision || 0);
-    return Math.round(value * multiplier) / multiplier;
-  }
+
   cambioTipoMovimiento() {
     if (this.movimiento.tipoMovimiento == 'pago') { this.movimiento.interesDelPago = this.prestamo.capitalPendiente * this.prestamo.tasa / 100 / 12 }
   }
 
-  ngOnInit() {
 
-    this.prestamo = this.navParams.get("prestamo");
-    this.clear();
-
-  }
   insertarMovimiento() {
-
     if ((this.movimiento.capitalDelPago == 0 && this.movimiento.interesDelPago == 0)
       && this.movimiento.tipoMovimiento == 'pago') {
       this.errorInteresOCapital = true;
-      setTimeout(() => {
-        this.errorInteresOCapital = false;
-      }, 2000)
       return
     }
     if (this.movimiento.montoPrestado == 0 && this.movimiento.tipoMovimiento == 'desembolso') {
       this.errorMontoPrestado = true;
-      setTimeout(() => {
-        this.errorMontoPrestado = false;
-      }, 2000)
       return
     }
-    if (this.tipoMovimiento == 'desembolso') { this.movimiento.capitalDelPago = 0; this.movimiento.interesDelPago = 0 }
-    else if (this.tipoMovimiento == 'pago') { this.movimiento.montoPrestado = 0 }
-    this.data.insertarMovimiento(this.movimiento);
+    if (this.movimiento.tipoMovimiento == 'desembolso') { this.movimiento.capitalDelPago = 0; this.movimiento.interesDelPago = 0 }
+    else if (this.movimiento.tipoMovimiento == 'pago') { this.movimiento.montoPrestado = 0 }
+
+    if (this.movimiento.id) { this.data.modificarMovimiento(this.movimiento); }
+    else { this.data.insertarMovimiento(this.movimiento); }
     var subscripcion = this.data.obtenerMovimientosPorPrestamo(this.prestamo.numeroPrestamo).subscribe((listaMovimientos) => {
       var valoresCalculados = this.funcionesComunes.calcularValoresPrestamo(listaMovimientos, this.prestamo);
       this.prestamo.capitalPrestado = valoresCalculados.capitalPrestado;
@@ -95,16 +86,41 @@ export class FormMovimientoPage {
       this.prestamo.montoCuotas = this.funcionesComunes.calcularMontoCuota(this.prestamo);
       this.prestamo.capitalPendiente = valoresCalculados.capitalPendiente;
       let a = moment(this.prestamo.fechaProximoPago);
-      this.prestamo.fechaProximoPago = a.add(1, 'month').format('yyy-MM-dd');
+      if (this.movimiento.tipoMovimiento != "inicial") this.prestamo.fechaProximoPago = a.add(1, 'month').format('YYYY-MM-DD');
       this.data.modificarPrestamo(this.prestamo);
       subscripcion.unsubscribe();
-      this.clear();
+      this.navCtrl.pop();
+      // this.clear();
     });
   }
-
-  formatFecha(event) {
-    console.log(event.value.format())
-    return (event.value.format())
+  calcularMontoTotal() {
+    this.movimiento.montoTotal = this.funcionesComunes.round(this.movimiento.interesDelPago + this.movimiento.capitalDelPago, 2);
+  }
+  borrarMovimiento() {
+    if (this.movimiento.tipoMovimiento == 'inicial') {
+      this.funcionesComunes.presenAlert("Warning", "No se puede borrar el movimiento inicial de un prestamo")
+      return
+    }
+    this.data.borrarMovimiento(this.movimiento.id);
+    this.actualizarPrestamo();
+    this.navCtrl.pop();
   }
 
+  actualizarPrestamo() {
+    let subscripcion = this.data.obtenerMovimientosPorPrestamo(this.prestamo.numeroPrestamo).subscribe((listaMovimientos) => {
+      let valoresCalculados = this.funcionesComunes.calcularValoresPrestamo(listaMovimientos, this.prestamo);
+      this.prestamo.capitalPrestado = valoresCalculados.capitalPrestado;
+      this.prestamo.pagadoCapital = valoresCalculados.pagadoCapital;
+      this.prestamo.capitalPendiente = valoresCalculados.capitalPendiente;
+      this.prestamo.montoCuotas = this.funcionesComunes.calcularMontoCuota(this.prestamo);
+      this.data.modificarPrestamo(this.prestamo);
+      subscripcion.unsubscribe();
+    })
+      ;
+
+  }
+  //esta funcion es un workaround, ya que el ngmodel convierte a string mis valores numericos 
+  convertToNumber(event): number {
+    return +event;
+  }
 }

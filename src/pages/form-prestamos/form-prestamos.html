@@ -5,9 +5,8 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar color="primary">
-    <ion-title>Agregar Prestamo</ion-title>
+    <ion-title>{{modificarOnuevo}} Prestamo</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content padding>
@@ -22,7 +21,8 @@
   </ion-item>
   <ion-item>
     <ion-label>Capital prestado</ion-label>
-    <ion-input text-right type="number" [(ngModel)]="prestamo.capitalPrestado" name="capitalPrestado" (blur)="calcularMontoCuota()"></ion-input>
+    <ion-input (ngModelChange)="prestamo.capitalPrestado = convertToNumber($event)" text-right type="number" [ngModel]="prestamo.capitalPrestado"
+      name="capitalPrestado" (blur)="calcularMontoCuota()"></ion-input>
   </ion-item>
   <ion-item>
     <ion-label>Tasa</ion-label>
@@ -30,7 +30,7 @@
   </ion-item>
   <ion-item>
     <ion-label>Tipo Tasa</ion-label>
-    <ion-select name="tipo" [(ngModel)]="prestamo.tipoTasa">
+    <ion-select name="tipo" (ionChange)="calcularMontoCuota()" [(ngModel)]="prestamo.tipoTasa">
       <ion-option>Mensual</ion-option>
       <ion-option>Anual</ion-option>
     </ion-select>
@@ -41,7 +41,8 @@
   </ion-item>
   <ion-item>
     <ion-label>Monto de cuotas</ion-label>
-    <ion-input text-right (blur)="calcularMontoCuota()" type="number" placeholder="" name="MomntoCuotas" [(ngModel)]="prestamo.montoCuotas"></ion-input>
+    <ion-input (ngModelChange)="prestamo.montoCuotas = convertToNumber($event)" text-right (blur)="calcularMontoCuota()" type="number"
+      placeholder="" name="MontoCuotas" [ngModel]="prestamo.montoCuotas"></ion-input>
   </ion-item>
   <ion-item>
     <ion-label>Fecha de inicio</ion-label>
