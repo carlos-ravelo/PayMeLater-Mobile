@@ -102,41 +102,5 @@ export class FormClientesPage {
     })
     this.cerrarBackDrop();
   }
-  /*   agregarCamposActionSheet() {
-      this.cerrarBackDrop();
-      let actionSheet = this.actionSheetCtrl.create({
-        title: 'Agregar Campo',
-        buttons: [
-          {
-            text: 'Cuenta Bancaria',
-            handler: () => {
-              this.addCuenta();
-            }
-          },
-          {
-            text: 'Telefono',
-            handler: () => {
-              this.addTelefono();
-            }
-          },
-          {
-            text: 'Email',
-            handler: () => {
-              this.addEmail();
-            }
-  
-          },
-          {
-            text: 'Cancel',
-            role: 'cancel',
-            handler: () => {
-              console.log('Cancel clicked');
-            }
-          }
-        ]
-      });
-      actionSheet.present();
-    } */
-
 
 }

@@ -1,7 +1,5 @@
-import { Component, Input, ViewChild } from '@angular/core';
-
+import { Component, Input } from '@angular/core';
 import { Prestamo } from '../../clases/prestamo'
-import { MatTableDataSource, MatPaginator } from '@angular/material';
 import * as moment from 'moment';
 
 /**
@@ -23,9 +21,7 @@ export class TablaAmortizacionComponent {
   }
 
   @Input() prestamo: Prestamo;
-  displayedColumns = ['position', 'interes', 'capital', 'saldo'];
-  dataSource = new MatTableDataSource();
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   calendario: any[];
 
   calcularCalendario(loan_amount, interest_rate, payments_per_year, years, payment, fechaInicial) {
@@ -33,7 +29,6 @@ export class TablaAmortizacionComponent {
     var remaining = loan_amount;
     var number_of_payments = payments_per_year * years;
     let nextDate = moment(fechaInicial);
-
     for (var i = 1; i <= number_of_payments; i++) {
       var interest = remaining * (interest_rate / 100 / payments_per_year);
       var principle = (payment - interest);
@@ -48,37 +43,31 @@ export class TablaAmortizacionComponent {
 
   calcularPmt(rate, nper, pv) {
     var pvif, pmt;
-
     pvif = Math.pow(1 + rate, nper);
     pmt = rate / (pvif - 1) * -(pv * pvif);
-
     return pmt;
   }
 
   ngOnChanges(changes) {
+    let montlyOrAnualyRate = this.prestamo.tipoTasa == "Anual" ? 1 : 12;
+    let tasaAnualizada = montlyOrAnualyRate * this.prestamo.tasa;
     this.calendario = this.calcularCalendario(
       this.prestamo.capitalPendiente,
-      this.prestamo.tasa,
+      tasaAnualizada,
       12,
       this.prestamo.cantidadCuotas / 12,
       this.prestamo.montoCuotas
       , this.prestamo.fechaProximoPago
     );
-
-    this.dataSource.data = this.calendario;
+    //  this.dataSource.data = this.calendario;
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
   }
-  ngOnInit() {
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
 
-
-  }
   ngAfterViewInit() {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
-    this.dataSource.paginator = this.paginator;
+
   }
 
 }

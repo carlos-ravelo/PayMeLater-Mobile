@@ -1,35 +1,14 @@
 <!-- Generated template for the TablaAmortizacionComponent component -->
-<mat-card>
-  Monto Cuota: {{prestamo.montoCuotas|currency}}
-  <br> Capital Pendiente: {{prestamo.capitalPendiente|currency}}
-</mat-card>
-<div class="example-container mat-elevation-z20">
-  <mat-table #table [dataSource]="dataSource">
-
-    <ng-container matColumnDef="position">
-      <mat-header-cell *matHeaderCellDef> Fecha </mat-header-cell>
-      <mat-cell *matCellDef="let cuota"> {{cuota[0]|date}} </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="capital">
-      <mat-header-cell *matHeaderCellDef> Capital </mat-header-cell>
-      <mat-cell *matCellDef="let cuota"> {{cuota[1]|currency}} </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="interes">
-      <mat-header-cell *matHeaderCellDef> Interes </mat-header-cell>
-      <mat-cell *matCellDef="let cuota"> {{cuota[2]|currency}} </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="saldo">
-      <mat-header-cell *matHeaderCellDef> Saldo </mat-header-cell>
-      <mat-cell *matCellDef="let cuota"> {{cuota[3]|currency}} </mat-cell>
-    </ng-container>
-
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-  </mat-table>
-  <mat-paginator #paginator [pageSize]="10" [showFirstLastButtons]="true">
-  </mat-paginator>
-
-</div>
+<ion-list>
+  <button ion-item *ngFor="let entry of calendario">
+    <b> {{entry[0]|date}}</b>
+    <p>
+      <b>Capital:</b> {{entry[1]|currency}}</p>
+    <div item-end>
+      <p>
+        <b>Interes:</b> {{entry[2]|currency}}</p>
+      <p>
+        <b>Saldo:</b> {{entry[3]|currency}}</p>
+    </div>
+  </button>
+</ion-list>

@@ -12,7 +12,7 @@
     <ion-title>PayMeLater</ion-title>
   </ion-navbar>
 </ion-header>
-<ion-content padding (swipeEvent)="swipe()">
+<ion-content padding>
   <ion-fab right bottom>
     <button ion-fab (click)="abrirInsertarCliente()">
       <ion-icon name="add"></ion-icon>
@@ -24,6 +24,8 @@
         <img src="assets/imgs/contact.png" alt="">
       </ion-avatar>
       <p>{{cliente?.nombre}}</p>
+      <p> {{cliente?.telefonos[0]?.numero}}
+      </p>
     </button>
   </ion-list>
 </ion-content>

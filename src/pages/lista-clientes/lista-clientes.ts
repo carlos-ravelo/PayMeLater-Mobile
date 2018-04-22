@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { ProvidersDataProvider } from '../../providers/providers-data/providers-data'
 import { Cliente } from '../../clases/cliente'
@@ -17,7 +17,7 @@ import { FormClientesPage } from '../../pages/form-clientes/form-clientes';
   selector: 'page-lista-clientes',
   templateUrl: 'lista-clientes.html',
 })
-export class ListaClientesPage {
+export class ListaClientesPage implements OnInit {
   listaClientes: Cliente[];
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public data: ProvidersDataProvider, ) {
@@ -31,11 +31,10 @@ export class ListaClientesPage {
 
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    this.data.obtenerClientes().subscribe(listaClientes => {
-      this.listaClientes = listaClientes;
-
-    });
-
+    this.data.obtenerClientes()
+      .subscribe(listaClientes => {
+        this.listaClientes = listaClientes;
+      });
   }
   irDetalleCliente($event, cliente) {
     this.navCtrl.push(DetalleClientePage, {
@@ -45,8 +44,5 @@ export class ListaClientesPage {
   }
   abrirInsertarCliente() {
     this.navCtrl.push(FormClientesPage, );
-  }
-  swipe() {
-    console.log("swiped")
   }
 }

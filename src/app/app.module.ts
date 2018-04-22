@@ -20,11 +20,6 @@ import { FormClientesPageModule } from '../pages/form-clientes/form-clientes.mod
 import { FormPrestamosPageModule } from '../pages/form-prestamos/form-prestamos.module'
 import { FormMovimientoPageModule } from '../pages/form-movimiento/form-movimiento.module'
 
-import { EditarClientePageModule } from '../pages/editar-cliente/editar-cliente.module'
-import { EditarMovimientoPageModule } from '../pages/editar-movimiento/editar-movimiento.module'
-import { EditarPrestamoPageModule } from '../pages/editar-prestamo/editar-prestamo.module'
-
-
 
 //Firebase
 import { AngularFireModule } from 'angularfire2';
@@ -40,15 +35,11 @@ import { ComponentsModule } from '../components/components.module'
 
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Screenshot } from '@ionic-native/screenshot'
-
 import { File } from '@ionic-native/file';
 import { FileOpener } from '@ionic-native/file-opener';
 import { Clipboard } from '@ionic-native/clipboard';
 import { CallNumber } from '@ionic-native/call-number';
 import { BackgroundMode } from '@ionic-native/background-mode';
-
-
 import { Contacts } from '@ionic-native/contacts'
 import { SocialSharing } from '@ionic-native/social-sharing'
 import { EmailComposer } from '@ionic-native/email-composer'
@@ -74,9 +65,6 @@ import { DatePipe } from '@angular/common';
     FormClientesPageModule,
     FormPrestamosPageModule,
     FormMovimientoPageModule,
-    EditarClientePageModule,
-    EditarMovimientoPageModule,
-    EditarPrestamoPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -87,9 +75,8 @@ import { DatePipe } from '@angular/common';
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     ProvidersDataProvider,
-    AngularFireModule, AngularFireAuth,
+    AngularFireAuth,
     FuncionesComunesProvider,
-    Screenshot,
     File,
     FileOpener,
     Clipboard,

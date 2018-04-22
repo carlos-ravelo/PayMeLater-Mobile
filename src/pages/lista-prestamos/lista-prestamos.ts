@@ -20,38 +20,25 @@ import { FormPrestamosPage } from '../../pages/form-prestamos/form-prestamos'
 })
 export class ListaPrestamosPage implements OnInit {
   listaPrestamos: Prestamo[];
-
+  thereIsNoLoanWarning: boolean;
   constructor(public navCtrl: NavController, public navParams: NavParams, public data: ProvidersDataProvider,
   ) {
   }
   ionViewDidLoad() {
     console.log('ionViewDidLoad ListaPrestamosPage');
   }
-  ngOnInit() {    // this.ObtenerPrestamos();
-
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    this.data.obtenerPrestamos().subscribe(listaPrestamos => {
-      this.listaPrestamos = listaPrestamos;
-    });
-
+  ngOnInit() {
+    this.data.obtenerPrestamos()
+      .subscribe(listaPrestamos => {
+        this.thereIsNoLoanWarning = listaPrestamos[0] ? false : true;
+        this.listaPrestamos = listaPrestamos;
+      });
   }
-
-  irDetallePrestamo = (event, prestamo) => {
-    // That's right, we're pushing to ourselves!
-    console.log(prestamo)
-    this.navCtrl.push(DetallePrestamoPage, {
-      prestamo
-    });
+  irDetallePrestamo = (event, prestamo): void => {
+    this.navCtrl.push(DetallePrestamoPage, { prestamo: prestamo });
   }
-  estaEnAtraso = (fecha) => {
-    return new Date(fecha) <= new Date()
-  }
-
-  abrirInsertarPrestamo = () => {
-    this.navCtrl.push(FormPrestamosPage, );
-  }
-
+  estaEnAtraso = (fecha): boolean => { return new Date(fecha) <= new Date(); }
+  abrirInsertarPrestamo = (): void => { this.navCtrl.push(FormPrestamosPage, ); }
 }
 
 

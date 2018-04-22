@@ -5,6 +5,7 @@ import { File } from '@ionic-native/file';
 import { FileOpener } from '@ionic-native/file-opener'
 import html2canvas from 'html2canvas'
 import { LoadingController, ToastController } from 'ionic-angular';
+import { AlertController } from 'ionic-angular';
 
 
 
@@ -18,21 +19,24 @@ import { LoadingController, ToastController } from 'ionic-angular';
 export class FuncionesComunesProvider {
 
   constructor(private file: File, private fileOpener: FileOpener
-    , public loadingCtrl: LoadingController, public toastCtrl: ToastController) {
+    , private loadingCtrl: LoadingController, private toastCtrl: ToastController, private alertCtrl: AlertController) {
     console.log('Hello FuncionesComunesProvider Provider');
   }
   calcularMontoCuota(prestamo: Prestamo) {
     let montoCuota: number
+    // let a = prestamo.tipoTasa == "Anual" ? 1 : 12;
+    let montlyOrAnualyRate = prestamo.tipoTasa == "Anual" ? 1 : 12;
+
     if (prestamo.capitalPrestado > 0 && prestamo.tasa > 0 && prestamo.cantidadCuotas == 0) {
-      montoCuota = prestamo.capitalPrestado * prestamo.tasa / 100 / 12;
+      montoCuota = prestamo.capitalPrestado * prestamo.tasa * montlyOrAnualyRate / 100 / 12;
       return isNaN(montoCuota) || !isFinite(montoCuota) ? 0 : montoCuota;
     }
     if (prestamo.capitalPrestado > 0 && prestamo.tasa == 0 && prestamo.cantidadCuotas > 0) {
       montoCuota = prestamo.capitalPrestado / prestamo.cantidadCuotas
       return isNaN(montoCuota) || !isFinite(montoCuota) ? 0 : montoCuota;
     }
-    else /* if (prestamo.capitalPrestado > 0 && prestamo.tasa > 0 && prestamo.cantidadCuotas > 0) */ {
-      let r = prestamo.tasa / 12 / 100;
+    else {
+      let r = prestamo.tasa * montlyOrAnualyRate / 12 / 100;
       let pv = prestamo.capitalPrestado;
       let n = prestamo.cantidadCuotas * -1
       montoCuota = parseFloat((r * (pv) / (1 - Math.pow((1 + r), n)) * 100 / 100).toFixed(2));
@@ -40,12 +44,25 @@ export class FuncionesComunesProvider {
 
     }
   }
-
-  redondear(value, places) {
-    var multiplier = Math.pow(10, places);
-    return (Math.round(value * multiplier) / multiplier);
+  NPER(ir: number, per: number, pmt: number, pv: number) {
+    /*ir -> Interes anual
+    per -> Numero de periodos por año (mensual = 12, quincenal = 24)
+    pmt: Pago Fijo Mensual
+    pv: Cantidad Prestada
+    */
+    let fv = 0;
+    var nbperiods;
+    if (ir != 0)
+      ir = ir / (100 * per);
+    nbperiods = Math.log((-fv * ir + pmt) / (pmt + ir * pv)) / Math.log(1 + ir)
+    return nbperiods;
   }
 
+
+  round(value, precision) {
+    var multiplier = Math.pow(10, precision || 0);
+    return Math.round(value * multiplier) / multiplier;
+  }
 
   //Retorna los valores calculados de un prestamo
   calcularValoresPrestamo(movimientos: Movimiento[], prestamo: Prestamo): any {
@@ -69,7 +86,14 @@ export class FuncionesComunesProvider {
       }
     }
   }
-
+  presenAlert(title, subtitle) {
+    let alert = this.alertCtrl.create({
+      title: title,
+      subTitle: subtitle,
+      buttons: ['Dismiss']
+    });
+    alert.present();
+  }
 
   imprimir = (divToPrint) => {
     let loader = this.loadingCtrl.create({
