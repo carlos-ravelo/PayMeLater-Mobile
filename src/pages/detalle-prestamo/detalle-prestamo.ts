@@ -9,7 +9,8 @@ import { FormMovimientoPage } from '../../pages/form-movimiento/form-movimiento'
 import { ActionSheetController } from 'ionic-angular'
 import { AlertController } from 'ionic-angular';
 import { FormPrestamosPage } from '../form-prestamos/form-prestamos'
-
+import { MovimientosPorPrestamoComponent } from '../../components/movimientos-por-prestamo/movimientos-por-prestamo'
+import { TablaAmortizacionComponent } from '../../components/tabla-amortizacion/tabla-amortizacion'
 
 
 /**
@@ -26,6 +27,9 @@ import { FormPrestamosPage } from '../form-prestamos/form-prestamos'
 })
 export class DetallePrestamoPage {
   @ViewChild(FabContainer) fab;
+  @ViewChild(MovimientosPorPrestamoComponent) movimientosPorPrestamo;
+  @ViewChild(TablaAmortizacionComponent) tablaAmortizacion;
+
   prestamo: Prestamo;
   montoAtraso: Number;
   fabIsOpen: boolean = false;
@@ -36,27 +40,21 @@ export class DetallePrestamoPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad DetallePrestamoPage');
-
-
   }
   ngOnInit() {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.calculateMontoAtraso();
-
   }
   ngOnChanges(changes) {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
     this.calculateMontoAtraso();
-
-
   }
   calculateMontoAtraso() {
     let fechaProximoPago = moment(this.prestamo.fechaProximoPago);
     let hoy = moment();
     let diferencia = 0;
-
     while (fechaProximoPago < hoy) {
       fechaProximoPago.add(1, 'month')
       diferencia++;
@@ -69,8 +67,6 @@ export class DetallePrestamoPage {
     this.funcionesComunes.imprimir(divToPrint);
     this.cerrarBackDrop();
   }
-
-
   cerrarBackDrop() {
     this.fabIsOpen = false;
     this.fab.close();
@@ -82,15 +78,15 @@ export class DetallePrestamoPage {
     this.cerrarBackDrop();
   }
 
-  borrarPrestamo() {
-    this.data.borrarPrestamo(this.prestamo);
+  deleteLoan() {
+    this.data.deleteLoan(this.prestamo);
     this.data.borrarMovimientosPorPrestamo(this.prestamo);
     this.navCtrl.pop();
 
   }
   abrirIsnertarMovimientos(tipoMovimiento) {
     this.navCtrl.push(FormMovimientoPage,
-      { prestamo: this.prestamo, tipoMovimiento: tipoMovimiento });
+      { prestamo: this.prestamo, tipoMovimiento: tipoMovimiento, esNuevoMovimiento: true });
     this.cerrarBackDrop();
 
   }
@@ -143,13 +139,14 @@ export class DetallePrestamoPage {
         {
           text: 'Eliminar',
           handler: () => {
-            this.borrarPrestamo();
+            this.deleteLoan();
           }
         }
       ]
     });
     confirm.present();
   }
+
 
 
 }

@@ -22,7 +22,7 @@ export class FuncionesComunesProvider {
     , private loadingCtrl: LoadingController, private toastCtrl: ToastController, private alertCtrl: AlertController) {
     console.log('Hello FuncionesComunesProvider Provider');
   }
-  calcularMontoCuota(prestamo: Prestamo) {
+  calculateAmountOfFee(prestamo: Prestamo) {
     let montoCuota: number
     // let a = prestamo.tipoTasa == "Anual" ? 1 : 12;
     let montlyOrAnualyRate = prestamo.tipoTasa == "Anual" ? 1 : 12;
@@ -86,6 +86,12 @@ export class FuncionesComunesProvider {
       }
     }
   }
+  copyObject(origin: Prestamo, target: Prestamo) {
+    for (let i in origin) {
+      target[i] = origin[i];
+    }
+  }
+
   presenAlert(title, subtitle) {
     let alert = this.alertCtrl.create({
       title: title,
@@ -121,5 +127,35 @@ export class FuncionesComunesProvider {
       position: position
     });
     toast.present();
+  }
+
+  filterArray(arrayToSearch, val) {
+    if (!val) {
+      return arrayToSearch
+    }
+
+    val = val.toString().toLowerCase();
+    var results = [];
+    arrayToSearch.map(obj => {
+
+      var props = Object.getOwnPropertyNames(obj);
+      for (var i = 0; i < props.length; i++) {
+        var prop = props[i];
+        if (Array.isArray(obj[prop])) {
+          var arr = obj[prop];
+          if (this.filterArray(arr, val).length) {
+            results.push(obj);
+            break;
+          }
+        } else {
+          var value = obj[prop];
+          if (value.toString().toLowerCase().indexOf(val) > -1) {
+            results.push(obj);
+            break;
+          }
+        }
+      }
+    });
+    return results;
   }
 }

@@ -48,7 +48,7 @@ export class FormClientesPage {
     //Borramos los campos Vacios
     if (!this.cliente.id || this.cliente.id.trim() == '') { delete this.cliente.id; }
     if (this.cliente.cuentas) this.cliente.cuentas = this.cliente.cuentas.filter(function (e) { if (e.banco != "") { return e } })
-    if (this.cliente.telefonos) this.cliente.telefonos = this.cliente.telefonos.filter(function (e) { return e != { tipo: "", numero: "" } })
+    if (this.cliente.telefonos) this.cliente.telefonos = this.cliente.telefonos.filter(function (e) { return e.numero.trim() != "" })
     if (this.cliente.emails) this.cliente.emails = this.cliente.emails.filter(function (e) { return e != "" })
     if (this.cliente.id) {
       this.data.modificarCliente(this.cliente)
@@ -74,7 +74,7 @@ export class FormClientesPage {
   };
 
   addTelefono() {
-    this.cliente.telefonos.push({ tipo: "", numero: "" });
+    this.cliente.telefonos.push({ tipo: "Celular", numero: "" });
   };
   addEmail() {
     if (!this.cliente.emails) { this.cliente.emails = [] }

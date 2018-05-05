@@ -9,7 +9,7 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>PayMeLater</ion-title>
+    <ion-title>Lista de clientes</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content padding>
@@ -18,8 +18,15 @@
       <ion-icon name="add"></ion-icon>
     </button>
   </ion-fab>
+  <ion-card color="warning" *ngIf="thereIsNoClientWarning">
+    <ion-card-content (click)="abrirInsertarPrestamo()">
+      No tiene Clientes a Visualizar, haga click para agregar
+    </ion-card-content>
+  </ion-card>
+  <ion-searchbar [showCancelButton]="true" (ionInput)="filterItems($event)">
+  </ion-searchbar>
   <ion-list>
-    <button detail-push ion-item *ngFor="let cliente of listaClientes" (click)="irDetalleCliente($event,cliente)">
+    <button detail-push ion-item *ngFor="let cliente of filteredListaClientes" (click)="irDetalleCliente($event,cliente)">
       <ion-avatar item-start>
         <img src="assets/imgs/contact.png" alt="">
       </ion-avatar>

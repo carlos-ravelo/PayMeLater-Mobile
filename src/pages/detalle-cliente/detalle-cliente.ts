@@ -4,11 +4,11 @@ import { Cliente } from '../../clases/cliente'
 import { Clipboard } from '@ionic-native/clipboard';
 import { CallNumber } from '@ionic-native/call-number';
 import { FormClientesPage } from '../../pages/form-clientes/form-clientes'
-
 import { ProvidersDataProvider } from '../../providers/providers-data/providers-data'
 import { FuncionesComunesProvider } from '../../providers/funciones-comunes/funciones-comunes';
 import { SocialSharing } from '@ionic-native/social-sharing'
 import { EmailComposer } from '@ionic-native/email-composer'
+import { ListaPrestamosPage } from '../lista-prestamos/lista-prestamos'
 
 
 /**
@@ -58,6 +58,11 @@ export class DetalleClientePage {
     this.db.borrarCliente(this.cliente);
     this.navCtrl.pop();
     this.funcionesComunes.presentToast(`Se Borro el Cliente ${this.cliente.nombre}`, 3000, "")
+  }
+  abrirListaDePrestamos() {
+    this.navCtrl.push(ListaPrestamosPage, {
+      filterWord: this.cliente.nombre
+    })
   }
 
   share(text) {

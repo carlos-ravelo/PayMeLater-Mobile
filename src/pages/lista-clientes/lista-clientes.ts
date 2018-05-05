@@ -4,6 +4,7 @@ import { ProvidersDataProvider } from '../../providers/providers-data/providers-
 import { Cliente } from '../../clases/cliente'
 import { DetalleClientePage } from '../detalle-cliente/detalle-cliente'
 import { FormClientesPage } from '../../pages/form-clientes/form-clientes';
+import { FuncionesComunesProvider } from '../../providers/funciones-comunes/funciones-comunes';
 
 /**
  * Generated class for the ListaClientesPage page.
@@ -19,8 +20,11 @@ import { FormClientesPage } from '../../pages/form-clientes/form-clientes';
 })
 export class ListaClientesPage implements OnInit {
   listaClientes: Cliente[];
+  filteredListaClientes: Cliente[];
+  thereIsNoClientWarning: boolean;
+
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    public data: ProvidersDataProvider, ) {
+    public data: ProvidersDataProvider, public funcionesComunes: FuncionesComunesProvider) {
   }
 
   ionViewDidLoad() {
@@ -34,6 +38,9 @@ export class ListaClientesPage implements OnInit {
     this.data.obtenerClientes()
       .subscribe(listaClientes => {
         this.listaClientes = listaClientes;
+        this.filteredListaClientes = listaClientes;
+        this.thereIsNoClientWarning = listaClientes[0] ? false : true;
+
       });
   }
   irDetalleCliente($event, cliente) {
@@ -45,4 +52,24 @@ export class ListaClientesPage implements OnInit {
   abrirInsertarCliente() {
     this.navCtrl.push(FormClientesPage, );
   }
+
+  /*   getItems(ev: any) {
+      // Reset items back to all of the items
+      this.filteredListaClientes = this.listaClientes;
+      // set val to the value of the searchbar
+      let val = ev.target.value;
+  
+      // if the value is an empty string don't filter the items
+      if (val && val.trim() != '') {
+        this.filteredListaClientes = this.listaClientes.filter((item) => {
+          return ((item.nombre.toLowerCase().indexOf(val.toLowerCase()) > -1));
+        })
+      }
+    } */
+
+  filterItems(event: any) {
+    const query = event.target.value;
+    this.filteredListaClientes = this.funcionesComunes.filterArray(this.listaClientes, query);
+  }
+
 }

@@ -25,15 +25,18 @@ export class FormMovimientoPage {
   errorMontoPrestado: boolean
   errorInteresOCapital: boolean;
   tiposDeMovimiento: string[];
-  modificarOnuevo: string;
+  esNuevoMovimiento: boolean;
+  modificarOnuevoLabel: string;
   constructor(private datePipe: DatePipe, public data: ProvidersDataProvider, public navCtrl: NavController, public navParams: NavParams, public funcionesComunes: FuncionesComunesProvider) {
   }
   ngOnInit() {
     this.prestamo = this.navParams.get("prestamo");
+    this.esNuevoMovimiento = this.navParams.get("esNuevoMovimiento");
     if (this.navParams.get("movimiento")) { this.movimiento = { ... this.navParams.get("movimiento") } }
     else { this.clear() };
+    //this.formatDateToForm();
     this.tiposDeMovimiento = this.movimiento.tipoMovimiento == "inicial" ? ["inicial"] : ["pago", "desembolso"];
-    this.modificarOnuevo = this.movimiento.id ? "Modificar" : "Insertar nuevo"
+    this.modificarOnuevoLabel = this.esNuevoMovimiento ? "Insertar nuevo" : "Modificar"
   }
   ionViewDidLoad() {
     console.log('ionViewDidLoad FormMovimientoPage');
@@ -76,21 +79,20 @@ export class FormMovimientoPage {
     }
     if (this.movimiento.tipoMovimiento == 'desembolso') { this.movimiento.capitalDelPago = 0; this.movimiento.interesDelPago = 0 }
     else if (this.movimiento.tipoMovimiento == 'pago') { this.movimiento.montoPrestado = 0 }
-
-    if (this.movimiento.id) { this.data.modificarMovimiento(this.movimiento); }
+    //this.formatDateToTimestamp();
+    if (!this.esNuevoMovimiento) { this.data.modificarMovimiento(this.movimiento); }
     else { this.data.insertarMovimiento(this.movimiento); }
     var subscripcion = this.data.obtenerMovimientosPorPrestamo(this.prestamo.numeroPrestamo).subscribe((listaMovimientos) => {
       var valoresCalculados = this.funcionesComunes.calcularValoresPrestamo(listaMovimientos, this.prestamo);
       this.prestamo.capitalPrestado = valoresCalculados.capitalPrestado;
       this.prestamo.pagadoCapital = valoresCalculados.pagadoCapital;
-      this.prestamo.montoCuotas = this.funcionesComunes.calcularMontoCuota(this.prestamo);
+      this.prestamo.montoCuotas = this.funcionesComunes.calculateAmountOfFee(this.prestamo);
       this.prestamo.capitalPendiente = valoresCalculados.capitalPendiente;
-      let a = moment(this.prestamo.fechaProximoPago);
-      if (this.movimiento.tipoMovimiento != "inicial") this.prestamo.fechaProximoPago = a.add(1, 'month').format('YYYY-MM-DD');
+      let a = moment(this.movimiento.fechaCorrespondiente);
+      if (this.esNuevoMovimiento) this.prestamo.fechaProximoPago = a.add(1, 'month').format('YYYY-MM-DD');
       this.data.modificarPrestamo(this.prestamo);
       subscripcion.unsubscribe();
       this.navCtrl.pop();
-      // this.clear();
     });
   }
   calcularMontoTotal() {
@@ -112,15 +114,28 @@ export class FormMovimientoPage {
       this.prestamo.capitalPrestado = valoresCalculados.capitalPrestado;
       this.prestamo.pagadoCapital = valoresCalculados.pagadoCapital;
       this.prestamo.capitalPendiente = valoresCalculados.capitalPendiente;
-      this.prestamo.montoCuotas = this.funcionesComunes.calcularMontoCuota(this.prestamo);
+      this.prestamo.montoCuotas = this.funcionesComunes.calculateAmountOfFee(this.prestamo);
       this.data.modificarPrestamo(this.prestamo);
       subscripcion.unsubscribe();
     })
       ;
 
   }
+  /*   formatDateToForm() {
+      this.prestamo.fechaInicio = moment(this.prestamo.fechaInicio).format('YYYY-MM-DD');
+      this.prestamo.fechaProximoPago = moment(this.prestamo.fechaProximoPago).format('YYYY-MM-DD');
+      this.movimiento.fechaCorrespondiente = moment(this.movimiento.fechaCorrespondiente).format('YYYY-MM-DD');
+      this.movimiento.fechaTransaccion = moment(this.movimiento.fechaTransaccion).format('YYYY-MM-DD');
+    }
+    formatDateToTimestamp() {
+      this.prestamo.fechaInicio = new Date(this.prestamo.fechaInicio);
+      this.prestamo.fechaProximoPago = new Date(this.prestamo.fechaProximoPago);
+      this.movimiento.fechaCorrespondiente = new Date(this.movimiento.fechaCorrespondiente);
+      this.movimiento.fechaTransaccion = new Date(this.movimiento.fechaTransaccion);
+    } */
   //esta funcion es un workaround, ya que el ngmodel convierte a string mis valores numericos 
   convertToNumber(event): number {
     return +event;
   }
+
 }
