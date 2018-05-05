@@ -2,8 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
-
-
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -19,6 +17,8 @@ import { DetalleClientePageModule } from '../pages/detalle-cliente/detalle-clien
 import { FormClientesPageModule } from '../pages/form-clientes/form-clientes.module'
 import { FormPrestamosPageModule } from '../pages/form-prestamos/form-prestamos.module'
 import { FormMovimientoPageModule } from '../pages/form-movimiento/form-movimiento.module'
+import { AmortizacionesPageModule } from '../pages/amortizaciones/amortizaciones.module'
+import { ReportesPageModule } from '../pages/reportes/reportes.module'
 
 
 //Firebase
@@ -43,7 +43,12 @@ import { BackgroundMode } from '@ionic-native/background-mode';
 import { Contacts } from '@ionic-native/contacts'
 import { SocialSharing } from '@ionic-native/social-sharing'
 import { EmailComposer } from '@ionic-native/email-composer'
-import { DatePipe } from '@angular/common';
+import { DatePipe, CurrencyPipe } from '@angular/common';
+
+import { IonicStorageModule } from '@ionic/storage';
+import { ChartsModule } from 'ng2-charts';
+
+
 
 
 @NgModule({
@@ -54,6 +59,7 @@ import { DatePipe } from '@angular/common';
     BrowserModule,
     BrowserAnimationsModule,
     IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule.enablePersistence(),
     ListaPrestamosPageModule,
@@ -64,7 +70,7 @@ import { DatePipe } from '@angular/common';
     DetalleClientePageModule,
     FormClientesPageModule,
     FormPrestamosPageModule,
-    FormMovimientoPageModule,
+    FormMovimientoPageModule, ReportesPageModule, AmortizacionesPageModule, ChartsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -82,7 +88,7 @@ import { DatePipe } from '@angular/common';
     Clipboard,
     CallNumber,
     BackgroundMode,
-    Contacts, SocialSharing, EmailComposer, DatePipe
+    Contacts, SocialSharing, EmailComposer, DatePipe, CurrencyPipe
   ]
 })
 export class AppModule { }

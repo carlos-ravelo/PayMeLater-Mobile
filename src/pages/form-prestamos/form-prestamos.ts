@@ -7,6 +7,7 @@ import { Movimiento } from '../../clases/movimiento'
 import { FuncionesComunesProvider } from '../../providers/funciones-comunes/funciones-comunes'
 import { DatePipe } from '@angular/common';
 import * as moment from 'moment'
+import { AlertController } from 'ionic-angular';
 
 /**
  * Generated class for the FormPrestamosPage page.
@@ -22,19 +23,22 @@ import * as moment from 'moment'
 export class FormPrestamosPage {
   listaCliente: Cliente[];
   prestamo: Prestamo;
+  originalPrestamo: Prestamo;
   movimiento: Movimiento;
-  errorCapitalInicial: boolean = false;
-  errorMontoCuotas: boolean = false;
-  errorCliente: boolean = false;
   modificarOnuevo: string;
   esNuevoPrestamo: boolean;
-  constructor(private datePipe: DatePipe, public navCtrl: NavController, public navParams: NavParams, public data: ProvidersDataProvider, private funcionesComunes: FuncionesComunesProvider) {
+
+  constructor(private datePipe: DatePipe, public navCtrl: NavController, public navParams: NavParams,
+    public data: ProvidersDataProvider, private funcionesComunes: FuncionesComunesProvider, public alertCtrl: AlertController) {
   }
   ngOnInit() {
-    this.obtenerClientes();
+    this.getClientList();
     if (this.navParams.get("prestamo")) {
+      this.originalPrestamo = this.navParams.get("prestamo");
       this.prestamo = { ... this.navParams.get("prestamo") };
-      this.obtenerMovimientoAmodificar();
+      let sonIguales = this.originalPrestamo == this.prestamo;
+
+      this.getInitialMovement();
       this.esNuevoPrestamo = false
     }
     else {
@@ -43,14 +47,14 @@ export class FormPrestamosPage {
       this.esNuevoPrestamo = true;
     };
     this.modificarOnuevo = this.prestamo.numeroPrestamo ? "Modificar" : "Insertar nuevo"
-
   }
-  obtenerClientes(): void {
+  getClientList(): void {
     this.data.obtenerClientes().subscribe(listaCliente => { this.listaCliente = listaCliente; });
   }
   clear() {
     this.prestamo = {
       numeroPrestamo: '',
+      estado: "activo",
       cliente: 'default',
       capitalPrestado: 0,
       tasa: 0,
@@ -93,7 +97,7 @@ export class FormPrestamosPage {
     })
 
   }
-  obtenerMovimientoAmodificar() {
+  getInitialMovement() {
 
     var subscripcion = this.data.obtenerMovimientoInicial(this.prestamo).subscribe(movimiento => {
       this.movimiento = movimiento[0];
@@ -113,25 +117,26 @@ export class FormPrestamosPage {
     this.data.insertarMovimiento(this.movimiento);
   }
 
-  calcularMontoCuota() {
+  calculateAmountOfFee() {
     this.prestamo.capitalPendiente = this.prestamo.capitalPrestado;
-    this.prestamo.montoCuotas = this.funcionesComunes.round(this.funcionesComunes.calcularMontoCuota(this.prestamo), 2);
+    this.prestamo.montoCuotas = this.funcionesComunes.round(this.funcionesComunes.calculateAmountOfFee(this.prestamo), 2);
   }
-  abrirModalFormClientes() {
-    // this.dialogRef.close("abrirModalFormCliente");
-  }
+
   formatFecha(event) {
     return (event.value.format())
   }
-  crearPrestamo() {
-    // this.prestamo.fechaInicio = this.prestamo.fechaInicio;
-    this.prestamo.capitalPendiente = this.prestamo.capitalPrestado;
-    if (this.prestamo.cliente == "default" || this.prestamo.cliente == "") { this.errorCliente = true; setTimeout(() => { this.errorCliente = false; }, 2000); return; }
-    if (this.prestamo.capitalPrestado == 0) { this.errorCapitalInicial = true; setTimeout(() => { this.errorCapitalInicial = false; }, 2000); return; }
-    if (this.prestamo.montoCuotas == 0) { this.errorMontoCuotas = true; setTimeout(() => { this.errorMontoCuotas = false; }, 2000); return; }
-    this.data.insertarPrestamos(this.prestamo);
-    if (!this.esNuevoPrestamo) { this.data.modificarMovimiento(this.movimiento) }
-    else { this.insertarMovimiento() }
+  createLoan() {
+    if (this.prestamo.capitalPrestado == 0 || this.prestamo.montoCuotas == 0) { return; }
+    if (!this.esNuevoPrestamo) {
+      this.funcionesComunes.copyObject(this.prestamo, this.originalPrestamo)
+      this.data.modificarPrestamo(this.originalPrestamo);
+      this.data.modificarMovimiento(this.movimiento);
+    }
+    else {
+      this.prestamo.capitalPendiente = this.prestamo.capitalPrestado;
+      this.insertarMovimiento();
+      this.data.insertarPrestamos(this.prestamo);
+    }
     this.clear();
     this.navCtrl.pop();
   }
@@ -141,5 +146,33 @@ export class FormPrestamosPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad FormPrestamosPage');
   }
+  deleteLoan() {
+    this.data.deleteLoan(this.prestamo);
+    this.data.borrarMovimientosPorPrestamo(this.prestamo);
+    this.navCtrl.pop();
+
+  }
+  ShowconfirmDelete() {
+    let confirm = this.alertCtrl.create({
+      title: 'Eliminar el prestamo?',
+      message: 'Esta seguro que desea eliminar el prestamo y todos los movimientos asociados?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: "cancel",
+          handler: () => {
+          }
+        },
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.deleteLoan();
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+
 
 }

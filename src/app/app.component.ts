@@ -7,6 +7,11 @@ import { BackgroundMode } from '@ionic-native/background-mode';
 import { LoginPage } from '../pages/login/login';
 import { ListaPrestamosPage } from '../pages/lista-prestamos/lista-prestamos';
 import { ListaClientesPage } from '../pages/lista-clientes/lista-clientes';
+import { Storage } from '@ionic/storage';
+import { ProvidersDataProvider } from '../providers/providers-data/providers-data'
+import { AmortizacionesPage } from '../pages/amortizaciones/amortizaciones'
+import { ReportesPage } from '../pages/reportes/reportes'
+import { LoggedInfo } from '../clases/loggedInfo'
 
 @Component({
   templateUrl: 'app.html'
@@ -17,7 +22,8 @@ export class MyApp {
 
 
   constructor(public afAuth: AngularFireAuth, public platform: Platform, public statusBar: StatusBar,
-    public splashScreen: SplashScreen, private backgroundMode: BackgroundMode) {
+    public splashScreen: SplashScreen, private backgroundMode: BackgroundMode, private storage: Storage,
+    private db: ProvidersDataProvider) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
@@ -25,9 +31,10 @@ export class MyApp {
       /*       { title: 'Home', component: HomePage },
             { title: 'List', component: ListPage }, */
       { title: 'Clientes', component: ListaClientesPage },
-      { title: 'Prestamos', component: ListaPrestamosPage }
+      { title: 'Prestamos', component: ListaPrestamosPage },
+      { title: 'Reportes', component: ReportesPage },
+      { title: 'Amortizaciones', component: AmortizacionesPage }
     ];
-
   }
 
   initializeApp() {
@@ -35,14 +42,24 @@ export class MyApp {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       this.backgroundMode.enable();
-      this.afAuth.authState.subscribe((a) => {
-        if (a) {
-          this.nav.setRoot(ListaPrestamosPage)
-        }
-        else if (!a) {
+      this.storage.get('loggedInfo').then((loggedInfo: LoggedInfo) => {
+        if (!loggedInfo) {
           this.nav.setRoot(LoginPage)
+          console.log('Not Logged info');
+
         }
-      })
+        else if (loggedInfo.logged) {
+          this.db.loggedAccount = loggedInfo.account;
+          this.nav.setRoot(ReportesPage)
+          console.log('Is Logged', loggedInfo.logged, loggedInfo.account);
+
+        }
+        else {
+          this.nav.setRoot(LoginPage)
+          console.log('Is Not Logged');
+
+        }
+      });
     });
   }
 
@@ -52,6 +69,8 @@ export class MyApp {
     this.nav.setRoot(page.component);
   }
   logout() {
+    this.storage.set('loggedInfo', { account: "", logged: false });
     this.afAuth.auth.signOut();
+    this.nav.setRoot(LoginPage)
   }
 }

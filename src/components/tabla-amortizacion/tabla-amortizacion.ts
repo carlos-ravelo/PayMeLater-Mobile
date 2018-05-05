@@ -17,13 +17,9 @@ export class TablaAmortizacionComponent {
   text: string;
 
   constructor() {
-
   }
-
   @Input() prestamo: Prestamo;
-
   calendario: any[];
-
   calcularCalendario(loan_amount, interest_rate, payments_per_year, years, payment, fechaInicial) {
     var schedule = [];
     var remaining = loan_amount;
@@ -36,11 +32,9 @@ export class TablaAmortizacionComponent {
       var row = [nextDate.format(), principle > 0 ? (principle < payment ? principle : payment) : 0, interest > 0 ? interest : 0, remaining > 0 ? remaining : 0];
       nextDate.add(1, 'month')
       if (interest > 1) { schedule.push(row); }
-
     }
     return schedule;
   }
-
   calcularPmt(rate, nper, pv) {
     var pvif, pmt;
     pvif = Math.pow(1 + rate, nper);
