@@ -1,0 +1,41 @@
+progress-bar {
+    .progress-outer {
+        width: 96%;
+        margin: 0px 2% 15px;
+        padding: 3px;
+        text-align: center;
+        background-color: #f4f4f4;
+        border: 1px solid #dcdcdc;
+        color: #fff;
+        border-radius: 20px;
+ 
+    }
+ 
+    .progress-inner {
+        min-width: 10%;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        padding: 5px;
+        border-radius: 20px;
+        background-color: map-get($colors, primary);
+        font-size: 10px;
+  
+    }
+    .progress-text{
+        font-size: 10px;
+        margin-bottom: 0%;
+        margin-top: 0% !important;
+
+    }
+    .item-md.item-block .item-inner{
+        border-bottom:0 !important;
+    }
+    .item-inner, .item-md ion-icon[item-start] + .item-input {
+        margin-left: 0px !important;
+    }
+    .label-md {
+        margin: 5px 8px 5px 0;
+    }
+
+}

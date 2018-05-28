@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Prestamo } from '../../clases/prestamo'
 import { ProvidersDataProvider } from '../../providers/providers-data/providers-data'
-import { FuncionesComunesProvider } from '../../providers/funciones-comunes/funciones-comunes'
 import { FormMovimientoPage } from '../../pages/form-movimiento/form-movimiento';
 import { Movimiento } from '../../clases/movimiento';
 
@@ -20,7 +19,7 @@ export class MovimientosPorPrestamoComponent {
   @Input() prestamo: Prestamo;
   listaMovimientos: Movimiento[];
   headerValues: any = {};
-  constructor(private db: ProvidersDataProvider, private funcionesComunes: FuncionesComunesProvider,
+  constructor(private db: ProvidersDataProvider,
     public navCtrl: NavController, public navParams: NavParams, ) { }
   ngOnInit() {
 

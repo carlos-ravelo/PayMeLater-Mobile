@@ -10,4 +10,4 @@ import { FormPrestamosPage } from './form-prestamos';
     IonicPageModule.forChild(FormPrestamosPage),
   ],
 })
-export class FormPrestamosPageModule {}
+export class FormPrestamosPageModule { }

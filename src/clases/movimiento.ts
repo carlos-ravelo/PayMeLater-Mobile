@@ -11,7 +11,7 @@ export class Movimiento {
         public fechaTransaccion: any,
         public notas: string,
         public id?: string,
-
+        public borrado?: boolean,
 
     ) { }
 }

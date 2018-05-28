@@ -90,6 +90,8 @@ export class FormMovimientoPage {
       this.prestamo.capitalPendiente = valoresCalculados.capitalPendiente;
       let a = moment(this.movimiento.fechaCorrespondiente);
       if (this.esNuevoMovimiento) this.prestamo.fechaProximoPago = a.add(1, 'month').format('YYYY-MM-DD');
+      this.prestamo.estado = this.prestamo.capitalPendiente <= 0 ? "completado" : 'activo';
+      if (this.prestamo.capitalPendiente <= 0) { this.prestamo.fechaProximoPago = null }
       this.data.modificarPrestamo(this.prestamo);
       subscripcion.unsubscribe();
       this.navCtrl.pop();

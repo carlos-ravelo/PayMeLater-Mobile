@@ -1,4 +1,3 @@
-//import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 //Angular Fire
@@ -8,7 +7,6 @@ import { Prestamo } from '../../clases/prestamo'
 import { Movimiento } from '../../clases/movimiento'
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Observable } from 'rxjs/Observable';
-import { Storage } from '@ionic/storage';
 import { FuncionesComunesProvider } from '../funciones-comunes/funciones-comunes';
 
 /*
@@ -24,18 +22,10 @@ export class ProvidersDataProvider {
   private movimientosCollection: AngularFirestoreCollection<Movimiento>;
   public loggedAccount: string;
 
-  constructor(public db: AngularFirestore, public afAuth: AngularFireAuth, private storage: Storage, public funcionesComunes: FuncionesComunesProvider) {
+  constructor(public db: AngularFirestore, public afAuth: AngularFireAuth, public funcionesComunes: FuncionesComunesProvider) {
     console.log('Hello ProvidersDataProvider Provider', this.loggedAccount);
-    //  this.loadrConfig();
   }
 
-  loadrConfig() {
-    if (this.loggedAccount) {
-      this.movimientosCollection = this.db.collection<Movimiento>(`usuarios/${this.loggedAccount}/movimientos`);
-      this.clientesCollection = this.db.collection<Cliente>(`usuarios/${this.loggedAccount}/clientes`);
-      this.prestamosCollection = this.db.collection<Prestamo>(`usuarios/${this.loggedAccount}/prestamos`, ref => ref.orderBy('fechaProximoPago', 'asc', ));
-    }
-  }
   //Retorna la lista de clientes completa
   obtenerClientes(): Observable<any[]> {
     this.clientesCollection = this.db.collection<Cliente>(`usuarios/${this.loggedAccount}/clientes`, ref => ref.orderBy('nombre', 'asc'));
@@ -48,11 +38,14 @@ export class ProvidersDataProvider {
       })
     })
   }
+  getClientByName(nombreCliente: string): Observable<any[]> {
+    this.clientesCollection = this.db.collection<Cliente>(`usuarios/${this.loggedAccount}/clientes`, ref => ref.where("nombre", "==", nombreCliente));
+    return this.clientesCollection.valueChanges()
+  }
 
   //Retorna la lista de prestamos completa
   obtenerPrestamos = (): Observable<any[]> => {
     this.prestamosCollection = this.db.collection<Prestamo>(`usuarios/${this.loggedAccount}/prestamos`, ref => ref.orderBy('fechaProximoPago', 'asc', ));
-
     return this.prestamosCollection.snapshotChanges().map(actions => {
       return actions.map(a => {
         const data = a.payload.doc.data() as Prestamo;
@@ -62,10 +55,21 @@ export class ProvidersDataProvider {
     })
   }
 
+  //Retorna la lista de prestamos para un cliente
+  getLoansByCustomer = (customer: string): Observable<any[]> => {
+    this.prestamosCollection = this.db.collection<Prestamo>(`usuarios/${this.loggedAccount}/prestamos`, ref => ref.where("cliente", "==", customer).orderBy('fechaProximoPago', 'asc', ));
+    return this.prestamosCollection.snapshotChanges().map(actions => {
+      return actions.map(a => {
+        const data = a.payload.doc.data() as Prestamo;
+        const numeroPrestamo = a.payload.doc.id;
+        return { numeroPrestamo, ...data };
+      })
+    })
+  }
   //Retorna la lista de movimientos completa 
   obtenerMovimientosByLapse(dateStart, dateEnd): Observable<any> {
     this.movimientosCollection = this.db.collection<Movimiento>(`usuarios/${this.loggedAccount}/movimientos`, ref => ref
-      .where('fechaTransaccion', '>', dateStart).where('fechaTransaccion', '<', dateEnd).orderBy('fechaTransaccion', 'asc'));
+      .where('fechaTransaccion', '>=', dateStart).where('fechaTransaccion', '<=', dateEnd).orderBy('fechaTransaccion', 'asc'));
     return this.movimientosCollection.snapshotChanges().map(actions => {
       return actions.map(a => {
         const data = a.payload.doc.data() as Movimiento;
@@ -133,6 +137,26 @@ export class ProvidersDataProvider {
       console.log("se inserto un prestamo");
     }
   }
+  insertLoanCalculation = (prestamo: Prestamo) => {
+    this.db.collection<Prestamo>(`usuarios/${this.loggedAccount}/loansCalculations`)
+      .add(prestamo);
+    console.log("se inserto un calculo de prestamo", prestamo);
+  }
+  updateLoanCalculation(prestamo: Prestamo) {
+    console.log("Modificando Prestamo", prestamo)
+    this.db.collection<Prestamo>(`usuarios/${this.loggedAccount}/loansCalculations`)
+      .doc(prestamo.numeroPrestamo).update(prestamo)
+  }
+  getLoanCalculations = (): Observable<any[]> => {
+    let loansCalculationsCollection = this.db.collection<Prestamo>(`usuarios/${this.loggedAccount}/loansCalculations`, ref => ref.orderBy('fechaInicio', 'asc', ));
+    return loansCalculationsCollection.snapshotChanges().map(actions => {
+      return actions.map(a => {
+        const data = a.payload.doc.data() as Prestamo;
+        data.numeroPrestamo = a.payload.doc.id;
+        return { ...data };
+      })
+    })
+  }
 
   //Borra un cliente
   borrarCliente(cliente: Cliente) {
@@ -145,6 +169,15 @@ export class ProvidersDataProvider {
   deleteLoan(prestamo: Prestamo) {
     this.prestamosCollection.doc(prestamo.numeroPrestamo).delete();
     console.log("se borro un prestamo");
+  }
+  /*   deleteLoan(prestamo: Prestamo) {
+      prestamo.estado = "borrado"
+      this.prestamosCollection.doc(prestamo.numeroPrestamo).update(prestamo)
+    } */
+  deleteLoanCalculation(Calculation: Prestamo) {
+    this.db.collection<Prestamo>(`usuarios/${this.loggedAccount}/loansCalculations`)
+      .doc(Calculation.numeroPrestamo).delete();
+    console.log("se borro un calculo");
   }
 
   //Borra un movimiento
@@ -161,6 +194,18 @@ export class ProvidersDataProvider {
 
     })
   }
+  //marcarMovimientosBorradosPorPrestamo
+  /* 
+    borrarMovimientosPorPrestamo(prestamo: Prestamo) {
+      var subscripcion = this.obtenerMovimientosPorPrestamo(prestamo.numeroPrestamo).subscribe((listaMovimientos) => {
+        listaMovimientos.forEach(movimiento => {
+          movimiento.estado = "borrado";
+          this.movimientosCollection.doc(movimiento.id).update(movimiento);
+          subscripcion.unsubscribe();
+        });
+  
+      })
+    } */
 
   //Modifica un cliente 
   modificarCliente(cliente: Cliente) {
@@ -171,7 +216,7 @@ export class ProvidersDataProvider {
   //Modifica un Prestamo 
   modificarPrestamo(prestamo: Prestamo) {
     console.log("Modificando Prestamo", prestamo)
-    var subscripcion = this.obtenerMovimientosPorPrestamo(prestamo.numeroPrestamo).subscribe((listaMovimientos) => {
+    this.obtenerMovimientosPorPrestamo(prestamo.numeroPrestamo).subscribe((listaMovimientos) => {
       var valoresCalculados = this.funcionesComunes.calcularValoresPrestamo(listaMovimientos, prestamo);
       prestamo.capitalPrestado = valoresCalculados.capitalPrestado;
       prestamo.pagadoCapital = valoresCalculados.pagadoCapital;
@@ -181,8 +226,6 @@ export class ProvidersDataProvider {
 
     })
   }
-
-
   //Modifica un Movimiento 
   modificarMovimiento(movimiento: Movimiento, ) {
     this.movimientosCollection.doc(movimiento.id).update(movimiento);

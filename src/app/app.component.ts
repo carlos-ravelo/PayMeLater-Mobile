@@ -12,33 +12,54 @@ import { ProvidersDataProvider } from '../providers/providers-data/providers-dat
 import { AmortizacionesPage } from '../pages/amortizaciones/amortizaciones'
 import { ReportesPage } from '../pages/reportes/reportes'
 import { LoggedInfo } from '../clases/loggedInfo'
+import { AlertController } from 'ionic-angular';
+import { ReportesPorClientePage } from '../pages/reportes-por-cliente/reportes-por-cliente';
+
+
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
-  pages: Array<{ title: string, component: any }>;
-
+  pages: Array<{ title: string, component: any, icon: string, color: string, class: string }>;
+  reportesPages: Array<{ title: string, component: any, icon: string, color: string, class: string }>;
+  alert: any;
 
   constructor(public afAuth: AngularFireAuth, public platform: Platform, public statusBar: StatusBar,
     public splashScreen: SplashScreen, private backgroundMode: BackgroundMode, private storage: Storage,
-    private db: ProvidersDataProvider) {
+    private db: ProvidersDataProvider, private alertCtrl: AlertController) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
     this.pages = [
-      /*       { title: 'Home', component: HomePage },
-            { title: 'List', component: ListPage }, */
-      { title: 'Clientes', component: ListaClientesPage },
-      { title: 'Prestamos', component: ListaPrestamosPage },
-      { title: 'Reportes', component: ReportesPage },
-      { title: 'Amortizaciones', component: AmortizacionesPage }
+      { title: 'Clientes', component: ListaClientesPage, icon: 'people', color: "", class: "fas fa-users" },
+      { title: 'Prestamos', component: ListaPrestamosPage, icon: '', color: "", class: "fas fa-university" },
+      { title: 'Amortizaciones', component: AmortizacionesPage, icon: '', color: "", class: "fas fa-chart-line" },
+    ];
+
+
+    this.reportesPages = [
+      { title: 'Reportes por mes', component: ReportesPage, icon: 'stats', color: "", class: "far fa-chart-bar" },
+      { title: 'Reporte por Clientes', component: ReportesPorClientePage, icon: '', color: "", class: "fas fa-chart-pie" },
     ];
   }
-
   initializeApp() {
     this.platform.ready().then(() => {
+      this.platform.registerBackButtonAction(() => {
+
+        if (this.nav.canGoBack()) {
+          this.nav.pop();
+        }
+        else {
+          if (this.alert) {
+            this.alert.dismiss();
+            this.alert = null;
+          } else {
+            this.showAlert();
+          }
+        }
+      })
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       this.backgroundMode.enable();
@@ -50,6 +71,7 @@ export class MyApp {
         }
         else if (loggedInfo.logged) {
           this.db.loggedAccount = loggedInfo.account;
+          this.db.db.firestore.disableNetwork();
           this.nav.setRoot(ReportesPage)
           console.log('Is Logged', loggedInfo.logged, loggedInfo.account);
 
@@ -61,6 +83,29 @@ export class MyApp {
         }
       });
     });
+  }
+
+  showAlert() {
+    this.alert = this.alertCtrl.create({
+      title: 'Exit?',
+      message: 'Do you want to exit the app?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            this.alert = null;
+          }
+        },
+        {
+          text: 'Exit',
+          handler: () => {
+            this.platform.exitApp();
+          }
+        }
+      ]
+    });
+    this.alert.present();
   }
 
   openPage(page) {

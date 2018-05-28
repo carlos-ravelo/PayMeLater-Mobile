@@ -5,11 +5,21 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-navbar color="primary">
+  <ion-searchbar #search (ionClear)="hideSearch()" (ionCancel)="hideSearch()" *ngIf="showSearch" (ionInput)="filterItems($event)"
+    animated="true" showCancelButton="true">
+  </ion-searchbar>
+
+
+  <ion-navbar color="primary" [ngClass]="{'hidden':showSearch }">
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Lista de clientes</ion-title>
+    <ion-buttons end *ngIf="!showSearch">
+      <button ion-button icon-only (click)="displaySearch()">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content padding>
@@ -19,18 +29,16 @@
     </button>
   </ion-fab>
   <ion-card color="warning" *ngIf="thereIsNoClientWarning">
-    <ion-card-content (click)="abrirInsertarPrestamo()">
+    <ion-card-content (click)="abrirInsertarCliente()">
       No tiene Clientes a Visualizar, haga click para agregar
     </ion-card-content>
   </ion-card>
-  <ion-searchbar [showCancelButton]="true" (ionInput)="filterItems($event)">
-  </ion-searchbar>
   <ion-list>
-    <button detail-push ion-item *ngFor="let cliente of filteredListaClientes" (click)="irDetalleCliente($event,cliente)">
-      <ion-avatar item-start>
-        <img src="assets/imgs/contact.png" alt="">
+    <button *ngFor="let cliente of filteredListaClientes" detail-push ion-item (click)="irDetalleCliente($event,cliente)">
+      <ion-avatar item-start color="">
+        <ion-icon color="dark" class="avatarIcon" name="contact" md="ios-contact"></ion-icon>
       </ion-avatar>
-      <p>{{cliente?.nombre}}</p>
+      <h2>{{cliente?.nombre}}</h2>
       <p> {{cliente?.telefonos[0]?.numero}}
       </p>
     </button>

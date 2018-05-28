@@ -1,12 +1,12 @@
 page-form-clientes {
 
        
-    .input-cover{
+     .input-cover{
         width: 0%;
-    }
+    } 
     .input-select{
         width: 30%;
-    }
+    } 
 
     .fab {
         contain: layout !important;
@@ -34,5 +34,10 @@ page-form-clientes {
         z-index: 1;
         opacity: 0.8
      }
-        
+     .contactItem{
+        text-align: center;
+        font-size: 70px; //Preferred size here
+
+    }
+
 }

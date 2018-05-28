@@ -32,7 +32,7 @@ export class FuncionesComunesProvider {
       return isNaN(montoCuota) || !isFinite(montoCuota) ? 0 : montoCuota;
     }
     if (prestamo.capitalPrestado > 0 && prestamo.tasa == 0 && prestamo.cantidadCuotas > 0) {
-      montoCuota = prestamo.capitalPrestado / prestamo.cantidadCuotas
+      montoCuota = prestamo.capitalPendiente / prestamo.cantidadCuotas
       return isNaN(montoCuota) || !isFinite(montoCuota) ? 0 : montoCuota;
     }
     else {
@@ -86,7 +86,7 @@ export class FuncionesComunesProvider {
       }
     }
   }
-  copyObject(origin: Prestamo, target: Prestamo) {
+  copyObject(origin: any, target: any) {
     for (let i in origin) {
       target[i] = origin[i];
     }
@@ -120,7 +120,7 @@ export class FuncionesComunesProvider {
     });
 
   }
-  presentToast(message, timeMs, position) {
+  presentToast(message: string, timeMs: number, position: string) {
     let toast = this.toastCtrl.create({
       message: message,
       duration: timeMs,
@@ -133,11 +133,9 @@ export class FuncionesComunesProvider {
     if (!val) {
       return arrayToSearch
     }
-
-    val = val.toString().toLowerCase();
+    val = val.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
     var results = [];
     arrayToSearch.map(obj => {
-
       var props = Object.getOwnPropertyNames(obj);
       for (var i = 0; i < props.length; i++) {
         var prop = props[i];
@@ -149,7 +147,7 @@ export class FuncionesComunesProvider {
           }
         } else {
           var value = obj[prop];
-          if (value.toString().toLowerCase().indexOf(val) > -1) {
+          if (value && value.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").indexOf(val) > -1) {
             results.push(obj);
             break;
           }
@@ -157,5 +155,51 @@ export class FuncionesComunesProvider {
       }
     });
     return results;
+  }
+
+  filterArray1(arrayToSearch: any[], val) {
+    if (!val) {
+      return arrayToSearch
+    }
+    val = val.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    var results = [];
+
+    arrayToSearch.filter((obj) => {
+      var props = Object.getOwnPropertyNames(obj);
+      props.forEach((prop) => {
+        var value = obj[prop];
+        if (value && value.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").indexOf(val) > -1) {
+          results.push(obj);
+          return false;
+        }
+
+      })
+    })
+
+    arrayToSearch.map(obj => {
+      var props = Object.getOwnPropertyNames(obj);
+      for (var i = 0; i < props.length; i++) {
+        var prop = props[i];
+        if (Array.isArray(obj[prop])) {
+          var arr = obj[prop];
+          if (this.filterArray(arr, val).length) {
+            results.push(obj);
+            break;
+          }
+        } else {
+          var value = obj[prop];
+          if (value && value.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").indexOf(val) > -1) {
+            results.push(obj);
+            break;
+          }
+        }
+      }
+    });
+    return results;
+  }
+
+
+  convertToNumber(event): number {
+    return +event;
   }
 }

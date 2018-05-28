@@ -1,10 +1,12 @@
 <!-- Generated template for the TablaAmortizacionComponent component -->
 <ion-list>
   <button ion-item *ngFor="let entry of calendario">
-    <b> {{entry[0]|date}}</b>
-    <p>
-      <b>Capital:</b> {{entry[1]|currency}}</p>
-    <div item-end>
+    <div>
+      <b> {{entry[0]|date}}</b>
+      <p>
+        <b>Capital:</b> {{entry[1]|currency}}</p>
+    </div>
+    <div class="item-end-controlled-at-50" item-end>
       <p>
         <b>Interes:</b> {{entry[2]|currency}}</p>
       <p>

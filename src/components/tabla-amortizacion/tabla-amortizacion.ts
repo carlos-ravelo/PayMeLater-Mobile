@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Prestamo } from '../../clases/prestamo'
 import * as moment from 'moment';
+import { ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * Generated class for the TablaAmortizacionComponent component.
@@ -10,9 +11,11 @@ import * as moment from 'moment';
  */
 @Component({
   selector: 'tabla-amortizacion',
-  templateUrl: 'tabla-amortizacion.html'
+  templateUrl: 'tabla-amortizacion.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
+
 })
-export class TablaAmortizacionComponent {
+export class TablaAmortizacionComponent implements OnChanges {
 
   text: string;
 
@@ -20,7 +23,8 @@ export class TablaAmortizacionComponent {
   }
   @Input() prestamo: Prestamo;
   calendario: any[];
-  calcularCalendario(loan_amount, interest_rate, payments_per_year, years, payment, fechaInicial) {
+  calcularCalendario(loan_amount: number, interest_rate: number, payments_per_year: number, years: number, payment: number,
+    fechaInicial: string) {
     var schedule = [];
     var remaining = loan_amount;
     var number_of_payments = payments_per_year * years;
@@ -43,6 +47,13 @@ export class TablaAmortizacionComponent {
   }
 
   ngOnChanges(changes) {
+    this.crearTabla()
+
+    //  this.dataSource.data = this.calendario;
+    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+    //Add '${implements OnChanges}' to the class.
+  }
+  crearTabla() {
     let montlyOrAnualyRate = this.prestamo.tipoTasa == "Anual" ? 1 : 12;
     let tasaAnualizada = montlyOrAnualyRate * this.prestamo.tasa;
     this.calendario = this.calcularCalendario(
@@ -53,11 +64,7 @@ export class TablaAmortizacionComponent {
       this.prestamo.montoCuotas
       , this.prestamo.fechaProximoPago
     );
-    //  this.dataSource.data = this.calendario;
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
   }
-
   ngAfterViewInit() {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.

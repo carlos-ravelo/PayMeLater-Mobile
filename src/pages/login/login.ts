@@ -5,7 +5,7 @@ import { FuncionesComunesProvider } from '../../providers/funciones-comunes/func
 import { Storage } from '@ionic/storage';
 import { ReportesPage } from '../reportes/reportes'
 import { ProvidersDataProvider } from '../../providers/providers-data/providers-data';
-
+import { MenuController } from 'ionic-angular';
 
 /**
  * Generated class for the LoginPage page.
@@ -23,9 +23,10 @@ export class LoginPage {
   password: string = "";
   constructor(public nav: NavController, public navParams: NavParams,
     public afAuth: AngularFireAuth, public loadingCtrl: LoadingController, public funcionesComunes: FuncionesComunesProvider,
-    private storage: Storage, public db: ProvidersDataProvider) {
+    private storage: Storage, public db: ProvidersDataProvider, public menu: MenuController) {
   }
   ionViewDidLoad() {
+    this.menu.enable(false)
     console.log('ionViewDidLoad LoginPage');
   }
   login() {
@@ -34,10 +35,11 @@ export class LoginPage {
     });
     loading.present();
     this.afAuth.auth.signInWithEmailAndPassword(this.username, this.password).then(() => {
-      this.storage.set('loggedInfo', { account: this.username, logged: true }).then(a => {
+      this.storage.set('loggedInfo', { account: this.username.toLowerCase(), logged: true }).then(a => {
         loading.dismiss();
-        this.db.loggedAccount = this.username;
+        this.db.loggedAccount = this.username.toLowerCase();
         this.nav.setRoot(ReportesPage);
+        this.menu.enable(true)
       }
       );
     }, error => {

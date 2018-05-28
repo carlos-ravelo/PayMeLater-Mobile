@@ -1,19 +1,32 @@
 <ion-menu [content]="content">
   <ion-header>
-    <ion-toolbar color="">
+    <ion-toolbar color="primary">
       <ion-title>Menu</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-content>
     <ion-list>
-      <ion-item>Logged as {{db.loggedAccount}}</ion-item>
+      <ion-item-divider color="light">Modulos</ion-item-divider>
 
       <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
+        <ion-icon [color]="p.color" [class]="p.class" item-start [name]="p.icon"></ion-icon>
         {{p.title}}
       </button>
+      <br>
+      <ion-item-divider color="light">Reportes</ion-item-divider>
+      <button menuClose ion-item *ngFor="let p of reportesPages" (click)="openPage(p)">
+        <ion-icon [color]="p.color" [class]="p.class" item-start [name]="p.icon"></ion-icon>
+        {{p.title}}
+      </button>
+      <br>
 
+      <ion-item-divider color="light"></ion-item-divider>
       <button menuClose ion-item (click)="logout()">
-        <ion-label color="primary">Log off </ion-label>
+        <ion-icon item-start color="dark" name="contact" md="ios-contact"></ion-icon>
+        <h3>{{db.loggedAccount}}</h3>
+        <p>
+          Log off
+        </p>
       </button>
     </ion-list>
   </ion-content>

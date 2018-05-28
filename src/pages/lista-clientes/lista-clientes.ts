@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { ProvidersDataProvider } from '../../providers/providers-data/providers-data'
 import { Cliente } from '../../clases/cliente'
@@ -19,9 +19,12 @@ import { FuncionesComunesProvider } from '../../providers/funciones-comunes/func
   templateUrl: 'lista-clientes.html',
 })
 export class ListaClientesPage implements OnInit {
+  @ViewChild('search') search: any;
   listaClientes: Cliente[];
   filteredListaClientes: Cliente[];
   thereIsNoClientWarning: boolean;
+  showSearch: boolean = false;
+
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public data: ProvidersDataProvider, public funcionesComunes: FuncionesComunesProvider) {
@@ -71,5 +74,17 @@ export class ListaClientesPage implements OnInit {
     const query = event.target.value;
     this.filteredListaClientes = this.funcionesComunes.filterArray(this.listaClientes, query);
   }
-
+  displaySearch() {
+    this.showSearch = true;
+    this.focusButton();
+  }
+  hideSearch() {
+    this.filteredListaClientes = this.listaClientes;
+    this.showSearch = false;
+  }
+  focusButton(): void {
+    setTimeout(() => {
+      this.search.setFocus();
+    }, 50);
+  }
 }
