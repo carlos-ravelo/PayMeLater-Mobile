@@ -1,0 +1,45 @@
+<!--
+  Generated template for the ReportesPorClientePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Reportes por cliente </ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-item>
+    <ion-label>Fecha inicial</ion-label>
+    <ion-datetime (ngModelChange)="cambioDeFechas($event,'fechaInicio')" displayFormat="MMM DD, YYYY" [(ngModel)]="dateStart"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label>Fecha final</ion-label>
+    <ion-datetime (ngModelChange)="cambioDeFechas($event,'fechaFinal')" displayFormat="MMM DD, YYYY" [(ngModel)]="dateEnd"></ion-datetime>
+  </ion-item>
+  <div style="display: block" *ngIf="totals">
+    <canvas baseChart [data]="doughnutChartData" [options]="doughnutChartOptions" [labels]="doughnutChartLabels" chartType="doughnut"></canvas>
+  </div>
+  <ion-item>
+    <ion-select interface="popover" (ionChange)="cambioDeChart($event)" [placeholder]="dataSource">
+      <ion-option>Interest Income</ion-option>
+      <ion-option>Capital Income</ion-option>
+      <ion-option>Capital Outcome</ion-option>
+    </ion-select>
+  </ion-item>
+
+  <br>
+  <br>
+  <div *ngIf="dataPerClient">
+    <progress-bar (click)="abrirListaDePrestamos(data.label)" *ngFor="let data of dataPerClient1;" [progress]="calculatePercentage(data.value)"
+      [value]="data.value" [label]="data.label"></progress-bar>
+  </div>
+</ion-content>

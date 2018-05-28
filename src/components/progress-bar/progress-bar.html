@@ -1,0 +1,20 @@
+<!-- Generated template for the ProgressBarComponent component -->
+<!-- <button ion-item>
+  <ion-icon name="cash" item-start></ion-icon>
+ -->
+
+
+
+
+<button ion-item>
+  <ion-icon item-start name="cash"></ion-icon>
+  <h3 class="progress-text"> {{label}}, {{value|currency}} </h3>
+
+  <div class="progress-outer">
+    <div class="progress-inner" [style.width]="getProgress()">
+      {{progress| number}}%
+    </div>
+
+  </div>
+
+</button>

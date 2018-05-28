@@ -6,46 +6,30 @@
 -->
 <ion-header>
   <ion-navbar color="primary">
-    <ion-title>Detalles del Cliente</ion-title>
-  </ion-navbar>
-</ion-header>
-
-
-<ion-content padding>
-  <ion-fab bottom right>
-    <button ion-fab>
-      <ion-icon name="arrow-dropup"></ion-icon>
-    </button>
-    <ion-fab-list side="top">
-      <button ion-fab (click)="borrarCliente()">
+    <ion-title>Detalles de clientes</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="ShowconfirmDelete()">
         <ion-icon name="trash"></ion-icon>
       </button>
-      <button ion-fab (click)="abrirEditarCliente()">
+      <button ion-button icon-only (click)="abrirEditarCliente()">
         <ion-icon name="create"></ion-icon>
       </button>
-      <button ion-fab (click)="abrirListaDePrestamos()">
-        <ion-icon name="arrow-forward"></ion-icon>
-      </button>
-    </ion-fab-list>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+  <ion-fab bottom right>
+    <button ion-fab color="primary" (click)="abrirListaDePrestamos()">
+      <ion-icon name="cash" color=""></ion-icon>
+    </button>
   </ion-fab>
-
-  <!--  <ion-fab bottom right>
-    <button ion-fab color="light" mini (click)="abrirEditarCliente()">
-      <ion-icon name="create"></ion-icon>
-    </button>
-    <button ion-fab color="light" mini (click)="borrarCliente()">
-      <ion-icon name="trash"></ion-icon>
-    </button>
-  </ion-fab> -->
-
-
-  <ion-item-divider color="secondary"> Datos de {{cliente.nombre}} </ion-item-divider>
-  <br>
-  <ion-item-group>
+  <div class="contactItem">
+    <ion-icon color="light" name="contact" md="ios-contact"></ion-icon>
+  </div>
+  <h2>{{cliente.nombre}}</h2>
+  <ion-card>
     <ion-item-divider color="light">Telefonos:</ion-item-divider>
-    <button ionic-item *ngIf="!cliente.telefonos[0]" ion-button color="warning" block (click)="abrirEditarCliente()">
-      No Hay Telefonos disponibles
-    </button>
+    <ion-item>No hay telefonos disponibles</ion-item>
     <ion-list>
       <ion-item-sliding *ngFor='let telefono of cliente.telefonos;index as i'>
         <ion-item>
@@ -60,7 +44,7 @@
           <ion-icon name="copy" item-end (click)="copiarAlClipboard(telefono.numero)"></ion-icon>
         </ion-item>
         <ion-item-options side="right">
-          <button ion-button color="primary" (click)="copiarAlClipboard(telefono.numero)">
+          <button ion-button color="" (click)="copiarAlClipboard(telefono.numero)">
             <ion-icon name="copy"></ion-icon>
             Copy
           </button>
@@ -74,10 +58,10 @@
       </ion-item-sliding>
       <br>
     </ion-list>
+  </ion-card>
+  <ion-card>
     <ion-item-divider color="light">Cuentas:</ion-item-divider>
-    <button *ngIf="!cliente.cuentas[0]" ion-button color="warning" block (click)="abrirEditarCliente()">
-      No Hay Cuentas Agregadas
-    </button>
+    <ion-item>No hay Cuentas disponibles</ion-item>
     <ion-list>
       <ion-item-sliding *ngFor='let cuenta of cliente.cuentas;index as i'>
         <ion-item>
@@ -95,28 +79,20 @@
           </button>
         </ion-item-options>
         <ion-item-options side="left">
-          <button ion-button color="secondary">
-            <ion-icon name="call"></ion-icon>
-            Llamar
+          <button (click)="share(cuenta.banco +' '+ cuenta.numero)" ion-button color="secondary">
+            Share
           </button>
-
         </ion-item-options>
       </ion-item-sliding>
     </ion-list>
+  </ion-card>
+  <ion-card>
     <ion-item-divider color="light">Emails:</ion-item-divider>
-
-    <button *ngIf="!cliente.emails||!cliente.emails[0]" (click)="abrirEditarCliente()" ion-button color="warning" block>
-      No Hay Correos Electronicos
-    </button>
+    <ion-item>No hay Correos disponibles</ion-item>
     <ion-item *ngFor="let email of cliente.emails">
       {{email}}
       <ion-icon name="send" item-start (click)="sendEmail(email)"> </ion-icon>
       <ion-icon name="copy" item-end (click)="copiarAlClipboard(email)"></ion-icon>
     </ion-item>
-  </ion-item-group>
-  <!--     <ion-card-content>
-
-    </ion-card-content>
   </ion-card>
- -->
 </ion-content>

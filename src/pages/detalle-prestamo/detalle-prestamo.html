@@ -10,21 +10,28 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Detalle de Prestamos</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="openEditLoanPage()">
+        <ion-icon color="light" name="create"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="ShowconfirmDelete()">
+        <ion-icon color="light" name="trash"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
-
-
-<ion-content padding>
-
-
+<ion-content>
   <div id="todo">
     <div id="detalle">
-
-      <ion-item-divider color="secondary">
-        <ion-label>Prestamo</ion-label>
+      <ion-item-divider color="light" *ngIf="!isamortization">
+        <ion-label>Prestamo:</ion-label>
         <ion-label> {{prestamo.numeroPrestamo}}</ion-label>
       </ion-item-divider>
-      <ion-card-content (click)="abrirEditarPrestamo()">
+      <ion-item-divider color="light" *ngIf="isamortization">
+        <ion-label>Calculo de prestamo:</ion-label>
+        <ion-label> {{prestamo.notas}}</ion-label>
+      </ion-item-divider>
+      <ion-card-content (click)="openEditLoanPage()">
         <ion-grid>
           <ion-row>
             <ion-col col-6>
@@ -64,6 +71,8 @@
               <label>Fecha Proximo pago:</label>
               <br>
               <span class=" ">{{prestamo.fechaProximoPago|date}}</span>
+              <span *ngIf="!prestamo.fechaProximoPago" class=" ">No Aplica</span>
+
             </ion-col>
             <ion-col col-6>
               <label>Capital pendiente:</label>
@@ -78,75 +87,80 @@
               <span class=" ">{{montoAtraso|currency}}</span>
             </ion-col>
             <ion-col col-6>
-              <label>Pagado capital:</label>
-              <br>
-              <span class=" ">{{prestamo.pagadoCapital|currency}}</span>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col col-6>
-              <b>Interes pagado:</b>
-              {{movimientosPorPrestamo?.headerValues.totalInteresGanado|currency}}
-            </ion-col>
-            <ion-col col-6>
-              <label>Prox. Interes</label>
+              <label>Prox. Interes:</label>
               <br>
               <span class=" ">{{prestamo.capitalPendiente*(prestamo.tasa / (prestamo.tipoTasa == "Anual" ? 12 : 1))/100|currency}}</span>
             </ion-col>
+
           </ion-row>
+
           <ion-row>
+
             <ion-col col-6>
-              <label>Notas</label>
+              <label>Estado:</label>
               <br>
-              <span class=" ">{{notas}}</span>
+              <span class=" ">{{prestamo.estado}}</span>
+            </ion-col>
+            <ion-col col-6>
+              <label>Notas:</label>
+              <br>
+              <span class=" ">{{prestamo.notas}}</span>
             </ion-col>
           </ion-row>
         </ion-grid>
       </ion-card-content>
-
-      <!--       </ion-card>
- -->
     </div>
 
+    <ion-item>
+      <p> Interes Pagado : {{movimientosPorPrestamo?.headerValues.totalInteresGanado|currency}}
+      </p>
+      <p> Capital Pagado : {{prestamo.pagadoCapital|currency}}
+      </p>
+    </ion-item>
     <div id="movimientos">
-      <ion-item-divider color="secondary">
-        Movimientos
-      </ion-item-divider>
-      <movimientos-por-prestamo [prestamo]="prestamo"></movimientos-por-prestamo>
-      <ion-item-divider color="secondary">
+      <div *ngIf="!isamortization">
+        <ion-item-divider color="light">
+          Movimientos
+        </ion-item-divider>
+        <movimientos-por-prestamo [prestamo]="prestamo"></movimientos-por-prestamo>
+      </div>
+      <ion-item-divider color="light">
         Amortizacion
       </ion-item-divider>
       <tabla-amortizacion [prestamo]="prestamo"></tabla-amortizacion>
-      <!--       </ion-card>
- -->
     </div>
   </div>
-  <ion-fab right bottom #fab>
+  <ion-fab right bottom #fab *ngIf="!isamortization">
     <button ion-fab color="primary" (click)="this.fabIsOpen = !this.fabIsOpen">
       <ion-icon name="arrow-dropup"></ion-icon>
     </button>
     <ion-fab-list side="top">
-      <button ion-fab (click)="abrirIsnertarMovimientos('desembolso')">
+      <button ion-fab color="danger" (click)="abrirIsnertarMovimientos('desembolso')">
         <ion-label>Insertar Desembolso</ion-label>
-        <ion-icon color="dark" name="trending-down"></ion-icon>
+        <ion-icon color="dark" name="cash"></ion-icon>
       </button>
-      <button ion-fab (click)="abrirIsnertarMovimientos('pago')">
+      <button ion-fab color="secondary" (click)="abrirIsnertarMovimientos('pago')">
         <ion-label>Insertar Pago</ion-label>
-        <ion-icon color="secondary" name="trending-up"></ion-icon>
+        <ion-icon color="dark" name="cash"></ion-icon>
       </button>
       <button ion-fab color="light" (click)="presentPrintActionSheet()">
         <ion-label>Descargar</ion-label>
         <ion-icon name="cloud-download" color="dark"></ion-icon>
       </button>
-      <button ion-fab (click)="ShowconfirmDelete()">
+      <!--   <button ion-fab (click)="ShowconfirmDelete()">
         <ion-label>Borrar prestamo</ion-label>
         <ion-icon color="dark" name="trash"></ion-icon>
       </button>
       <button ion-fab (click)="abrirEditarPrestamo()">
         <ion-label>Editar prestamo</ion-label>
         <ion-icon color="dark" name="create"></ion-icon>
-      </button>
+      </button> -->
     </ion-fab-list>
+  </ion-fab>
+  <ion-fab right bottom #fab *ngIf="isamortization">
+    <button ion-fab color="primary" (click)="presentPrintActionSheet()">
+      <ion-icon name="cloud-download" color="light"></ion-icon>
+    </button>
   </ion-fab>
 </ion-content>
 <!-- Real floating action button, fixed. It will not scroll with the content -->

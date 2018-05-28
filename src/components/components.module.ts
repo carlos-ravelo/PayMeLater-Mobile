@@ -3,9 +3,18 @@ import { MovimientosPorPrestamoComponent } from './movimientos-por-prestamo/movi
 import { CommonModule } from '@angular/common'
 import { IonicModule } from 'ionic-angular';
 import { TablaAmortizacionComponent } from './tabla-amortizacion/tabla-amortizacion';
+import { ProgressBarComponent } from './progress-bar/progress-bar';
 @NgModule({
-	declarations: [MovimientosPorPrestamoComponent, TablaAmortizacionComponent],
+	declarations: [MovimientosPorPrestamoComponent, TablaAmortizacionComponent,
+		ProgressBarComponent,
+
+	],
 	imports: [CommonModule, IonicModule],
-	exports: [MovimientosPorPrestamoComponent, TablaAmortizacionComponent]
+	exports: [MovimientosPorPrestamoComponent, TablaAmortizacionComponent,
+		ProgressBarComponent,
+
+	]
 })
-export class ComponentsModule { }
+export class ComponentsModule {
+
+}

@@ -5,6 +5,7 @@ import { MyApp } from './app.component';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
+
 //Providers
 import { ProvidersDataProvider } from '../providers/providers-data/providers-data';
 
@@ -19,6 +20,8 @@ import { FormPrestamosPageModule } from '../pages/form-prestamos/form-prestamos.
 import { FormMovimientoPageModule } from '../pages/form-movimiento/form-movimiento.module'
 import { AmortizacionesPageModule } from '../pages/amortizaciones/amortizaciones.module'
 import { ReportesPageModule } from '../pages/reportes/reportes.module'
+import { NotificationsPopOverPageModule } from '../pages/notifications-pop-over/notifications-pop-over.module'
+import { ReportesPorClientePageModule } from '../pages/reportes-por-cliente/reportes-por-cliente.module'
 
 
 //Firebase
@@ -43,11 +46,11 @@ import { BackgroundMode } from '@ionic-native/background-mode';
 import { Contacts } from '@ionic-native/contacts'
 import { SocialSharing } from '@ionic-native/social-sharing'
 import { EmailComposer } from '@ionic-native/email-composer'
-import { DatePipe, CurrencyPipe } from '@angular/common';
+import { DatePipe, CurrencyPipe, TitleCasePipe } from '@angular/common';
 
 import { IonicStorageModule } from '@ionic/storage';
 import { ChartsModule } from 'ng2-charts';
-
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 
 
@@ -70,7 +73,7 @@ import { ChartsModule } from 'ng2-charts';
     DetalleClientePageModule,
     FormClientesPageModule,
     FormPrestamosPageModule,
-    FormMovimientoPageModule, ReportesPageModule, AmortizacionesPageModule, ChartsModule
+    FormMovimientoPageModule, ReportesPageModule, AmortizacionesPageModule, ChartsModule, NotificationsPopOverPageModule, ReportesPorClientePageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -88,7 +91,7 @@ import { ChartsModule } from 'ng2-charts';
     Clipboard,
     CallNumber,
     BackgroundMode,
-    Contacts, SocialSharing, EmailComposer, DatePipe, CurrencyPipe
+    Contacts, SocialSharing, EmailComposer, DatePipe, CurrencyPipe, LocalNotifications, TitleCasePipe
   ]
 })
 export class AppModule { }

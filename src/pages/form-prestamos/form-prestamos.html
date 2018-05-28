@@ -19,47 +19,62 @@
     <ion-note item-end>{{prestamo.numeroPrestamo}}</ion-note>
   </ion-item>
   <ion-item>
+    <ion-icon name="contact" item-start></ion-icon>
     <ion-label>Cliente</ion-label>
-    <ion-select name="tipo" placeholder="Seleccione" [(ngModel)]="prestamo.cliente">
+    <ion-select interface="popover" name="tipo" placeholder="Seleccione" [(ngModel)]="prestamo.cliente">
+      <ion-option value="" (ionSelect)="openFormNewClient()">Agregar nuevo cliente</ion-option>
       <ion-option *ngFor="let cliente of listaCliente">{{cliente.nombre}}</ion-option>
     </ion-select>
   </ion-item>
   <ion-item>
-    <ion-label>Capital prestado</ion-label>
+    <ion-icon item-start name="logo-usd"></ion-icon>
+
+    <ion-label>Capital inicial:</ion-label>
+
     <ion-input (ngModelChange)="prestamo.capitalPrestado = convertToNumber($event)" text-right type="number" [ngModel]="prestamo.capitalPrestado"
       name="capitalPrestado" (blur)="calculateAmountOfFee()"></ion-input>
   </ion-item>
   <ion-item>
+    <ion-icon item-start>%</ion-icon>
     <ion-label>Tasa</ion-label>
     <ion-input text-right (blur)="calculateAmountOfFee()" type="number" placeholder="Tasa" name="tasa" [(ngModel)]="prestamo.tasa"></ion-input>
   </ion-item>
   <ion-item>
     <ion-label>Tipo Tasa</ion-label>
-    <ion-select name="tipo" (ionChange)="calculateAmountOfFee()" [(ngModel)]="prestamo.tipoTasa">
+    <ion-icon item-start md="ios-create"></ion-icon>
+
+    <ion-select interface="popover" name="tipo" (ionChange)="calculateAmountOfFee()" [(ngModel)]="prestamo.tipoTasa">
       <ion-option>Mensual</ion-option>
       <ion-option>Anual</ion-option>
     </ion-select>
   </ion-item>
   <ion-item>
     <ion-label>Cantidad de cuotas</ion-label>
+    <ion-icon item-start name="time"></ion-icon>
+
     <ion-input text-right (blur)="calculateAmountOfFee()" type="number" placeholder="" name="cantidadCuotas" [(ngModel)]="prestamo.cantidadCuotas"></ion-input>
   </ion-item>
   <ion-item>
     <ion-label>Monto de cuotas</ion-label>
+    <ion-icon item-start name="cash"></ion-icon>
+
     <ion-input (ngModelChange)="prestamo.montoCuotas = convertToNumber($event)" text-right (blur)="calculateAmountOfFee()" type="number"
       placeholder="" name="MontoCuotas" [ngModel]="prestamo.montoCuotas"></ion-input>
   </ion-item>
   <ion-item>
+    <ion-icon item-start name="calendar"></ion-icon>
     <ion-label>Fecha de inicio</ion-label>
     <ion-datetime displayFormat="MMM DD, YYYY" [(ngModel)]="prestamo.fechaInicio"></ion-datetime>
   </ion-item>
   <ion-item>
+    <ion-icon item-start name="calendar"></ion-icon>
     <ion-label>Fecha proximo pago</ion-label>
     <ion-datetime displayFormat="MMM DD, YYYY" [(ngModel)]="prestamo.fechaProximoPago"></ion-datetime>
   </ion-item>
   <ion-item>
+    <ion-icon item-start name="paper"></ion-icon>
     <ion-label>Notas</ion-label>
-    <ion-input text-right [(ngModel)]="prestamo.Notas"></ion-input>
+    <ion-input text-right [(ngModel)]="prestamo.notas"></ion-input>
   </ion-item>
   <ion-fab right bottom #fab>
     <button ion-fab (click)="createLoan()" color="secondary">

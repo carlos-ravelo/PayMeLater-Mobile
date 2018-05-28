@@ -1,7 +1,5 @@
 page-lista-prestamos {
-    .list-md .item-block .item-inner {
-        border-bottom: 1px solid #dedede !important;
-    }
+   
     .atraso{
         color: red
     }
@@ -11,5 +9,13 @@ page-lista-prestamos {
     .item-note{
         width:50%
     }
-
+    .searchbar-md {
+        padding: 0px;
+    }
+    .hidden{
+        display: none
+    }
+    .toolbar-md {
+        padding: 0px;
+    }
 }

@@ -4,54 +4,88 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<ion-header>
-  <ion-navbar color="primary">
+<ion-header no-border>
+  <ion-searchbar #search (ionClear)="hideSearch()" (ionCancel)="hideSearch()" *ngIf="showSearch" (ionInput)="filterItems($event)"
+    animated="true" showCancelButton="true">
+  </ion-searchbar>
+  <ion-navbar color="primary" [ngClass]="{'hidden':showSearch }">
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Lista de prestamos</ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only>
+    <ion-title *ngIf="!showSearch">Lista de prestamos</ion-title>
+    <ion-buttons end *ngIf="!showSearch">
+      <button ion-button icon-only (click)="displaySearch()" [ngClass]="{'hidden': fromClientsDetail}">
         <ion-icon name="search"></ion-icon>
       </button>
-      <button ion-button icon-only>
+      <!--       <button ion-button icon-only>
         <ion-icon name="options"></ion-icon>
-      </button>
+      </button> -->
     </ion-buttons>
   </ion-navbar>
+  <ion-toolbar color="light">
+    <ion-item>
+      <p>
+        <b>Total capital Pendiente: </b>{{totalLoans|currency}}</p>
+      <p>
+        <b>Total interes mensual: </b>{{totalInteresMensual|currency}}</p>
+    </ion-item>
+  </ion-toolbar>
 </ion-header>
-
-
-<ion-content padding>
-  <ion-fab right bottom>
+<ion-content>
+  <ion-fab right bottom [ngClass]="{'hidden': fromClientsDetail}">
     <button ion-fab (click)="abrirInsertarPrestamo()">
       <ion-icon name="add"></ion-icon>
     </button>
   </ion-fab>
-  <ion-item>
-    <p>
-      <b>Total capital Pendiente: </b>{{totalLoans|currency}}</p>
-    <p>
-      <b>Total interes mensual: </b>{{totalInteresMensual|currency}}</p>
-  </ion-item>
   <ion-card color="warning" *ngIf="thereIsNoLoanWarning">
     <ion-card-content (click)="abrirInsertarPrestamo()">
       No tiene Prestamos a Visualizar, haga click para agregar
     </ion-card-content>
   </ion-card>
-  <ion-searchbar [showCancelButton]="true" name="searchBar" (ionInput)="filterItems($event)" [(ngModel)]='filterWord'>
-  </ion-searchbar>
+
   <ion-list>
-    <button ion-item *ngFor="let prestamo of filteredListaPrestamos" (click)="irDetallePrestamo($event,prestamo)">
-      <ion-icon name="cash" color="secondary"></ion-icon>
-      <label for=""> {{prestamo.numeroPrestamo}}</label>
-      <br>
-      <label [ngClass]="{'atraso':estaEnAtraso(prestamo.fechaProximoPago),aTiempo:!estaEnAtraso(prestamo.fechaProximoPago)}">
-        {{prestamo.fechaProximoPago|date}}</label>
-      <div class="item-note" item-end>
-        {{prestamo.cliente}}
-        <br> {{prestamo.capitalPendiente|currency}}
-      </div>
-    </button>
+    <ion-list-header>
+      Prestamos activos
+    </ion-list-header>
+    <ion-item-sliding #item *ngFor="let prestamo of filteredListaPrestamos">
+      <button ion-item (click)="irDetallePrestamo($event,prestamo)">
+        <ion-icon name="cash" color="secondary"></ion-icon>
+        <label> {{prestamo.numeroPrestamo}}</label>
+        <br>
+        <label [ngClass]="{'atraso':estaEnAtraso(prestamo.fechaProximoPago),aTiempo:!estaEnAtraso(prestamo.fechaProximoPago)}">
+          {{prestamo.fechaProximoPago|date}}</label>
+        <span *ngIf="!prestamo.fechaProximoPago" class=" ">Completado</span>
+        <div class="item-note" item-end>
+          {{prestamo.cliente}}
+          <br> {{prestamo.capitalPendiente|currency}}
+        </div>
+      </button>
+      <ion-item-options side="left">
+        <button ion-button expandable (click)="showPressMenu($event,prestamo);item.close()">Reminder
+          <ion-icon name="time"></ion-icon>
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+
   </ion-list>
+  <ion-list>
+    <ion-list-header *ngIf="filteredCompletedListaPrestamos && filteredCompletedListaPrestamos[0] ">
+      Prestamos Completados
+    </ion-list-header>
+    <ion-card *ngFor="let prestamo of filteredCompletedListaPrestamos">
+      <button ion-item (click)="irDetallePrestamo($event,prestamo)">
+        <ion-icon name="cash" color="secondary"></ion-icon>
+        <label for=""> {{prestamo.numeroPrestamo}}</label>
+        <br>
+        <label [ngClass]="{'atraso':estaEnAtraso(prestamo.fechaProximoPago),aTiempo:!estaEnAtraso(prestamo.fechaProximoPago)}">
+          {{prestamo.fechaProximoPago|date}}</label>
+        <span *ngIf="!prestamo.fechaProximoPago" class=" ">Completado</span>
+        <div class="item-note" item-end>
+          {{prestamo.cliente}}
+          <br> {{prestamo.capitalPendiente|currency}}
+        </div>
+      </button>
+    </ion-card>
+  </ion-list>
+
 </ion-content>

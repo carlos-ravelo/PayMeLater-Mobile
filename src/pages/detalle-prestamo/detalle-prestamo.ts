@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit, OnChanges } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Prestamo } from '../../clases/prestamo';
 import { FuncionesComunesProvider } from '../../providers/funciones-comunes/funciones-comunes'
@@ -11,6 +11,7 @@ import { AlertController } from 'ionic-angular';
 import { FormPrestamosPage } from '../form-prestamos/form-prestamos'
 import { MovimientosPorPrestamoComponent } from '../../components/movimientos-por-prestamo/movimientos-por-prestamo'
 import { TablaAmortizacionComponent } from '../../components/tabla-amortizacion/tabla-amortizacion'
+import { Movimiento } from '../../clases/movimiento';
 
 
 /**
@@ -25,17 +26,22 @@ import { TablaAmortizacionComponent } from '../../components/tabla-amortizacion/
   selector: 'page-detalle-prestamo',
   templateUrl: 'detalle-prestamo.html',
 })
-export class DetallePrestamoPage {
+export class DetallePrestamoPage implements OnInit, OnChanges {
   @ViewChild(FabContainer) fab;
-  @ViewChild(MovimientosPorPrestamoComponent) movimientosPorPrestamo;
-  @ViewChild(TablaAmortizacionComponent) tablaAmortizacion;
+  @ViewChild(MovimientosPorPrestamoComponent) movimientosPorPrestamo: MovimientosPorPrestamoComponent;
+  @ViewChild(TablaAmortizacionComponent) tablaAmortizacion: TablaAmortizacionComponent;
 
   prestamo: Prestamo;
   montoAtraso: Number;
   fabIsOpen: boolean = false;
+  isamortization: boolean = false;
+  initialMovement: Movimiento;
   constructor(public navCtrl: NavController, public navParams: NavParams, public actionSheetCtrl: ActionSheetController,
     private funcionesComunes: FuncionesComunesProvider, public data: ProvidersDataProvider, public alertCtrl: AlertController) {
     this.prestamo = navParams.get('prestamo');
+    if (navParams.get("isamortization")) {
+      this.isamortization = navParams.get("isamortization");
+    }
   }
 
   ionViewDidLoad() {
@@ -45,11 +51,13 @@ export class DetallePrestamoPage {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.calculateMontoAtraso();
+    this.getInitialMovement();
   }
   ngOnChanges(changes) {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
     this.calculateMontoAtraso();
+
   }
   calculateMontoAtraso() {
     let fechaProximoPago = moment(this.prestamo.fechaProximoPago);
@@ -72,10 +80,20 @@ export class DetallePrestamoPage {
     this.fab.close();
   }
 
-  abrirEditarPrestamo() {
+  openEditLoanPage() {
+    if (this.isamortization) { return }
     this.navCtrl.push(FormPrestamosPage,
-      { prestamo: this.prestamo });
+      { prestamo: this.prestamo, initialMovement: this.initialMovement });
     this.cerrarBackDrop();
+  }
+
+  getInitialMovement() {
+
+    var subscripcion = this.data.obtenerMovimientoInicial(this.prestamo).subscribe(movimiento => {
+      this.initialMovement = movimiento[0];
+      subscripcion.unsubscribe();
+
+    })
   }
 
   deleteLoan() {
@@ -92,37 +110,41 @@ export class DetallePrestamoPage {
   }
 
   presentPrintActionSheet() {
-    let actionSheet = this.actionSheetCtrl.create({
-      title: 'Print a section',
-      buttons: [
-        {
-          text: 'Detalle',
-          handler: () => {
-            this.imprimir('detalle');
+    if (!this.isamortization) {
+      this.actionSheetCtrl.create({
+        title: 'Print a section',
+        buttons: [
+          {
+            text: 'Detalle',
+            handler: () => {
+              this.imprimir('detalle');
+            }
+          },
+          {
+            text: 'Todo',
+            handler: () => {
+              this.imprimir('todo');
+            }
+          },
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            handler: () => {
+            }
+          },
+          {
+            text: 'Movimientos',
+            handler: () => {
+              this.imprimir('movimientos');
+            }
           }
-        },
-        {
-          text: 'Todo',
-          handler: () => {
-            this.imprimir('todo');
-          }
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          handler: () => {
-          }
-        },
-        {
-          text: 'Movimientos',
-          handler: () => {
-            this.imprimir('movimientos');
-          }
-        }
-      ]
-    });
+        ]
+      }).present();
+    }
+    else {
+      this.imprimir('todo');
 
-    actionSheet.present();
+    }
   }
 
   ShowconfirmDelete() {

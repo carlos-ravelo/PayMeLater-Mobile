@@ -10,4 +10,4 @@ import { ListaClientesPage } from './lista-clientes';
     IonicPageModule.forChild(ListaClientesPage),
   ],
 })
-export class ListaClientesPageModule {}
+export class ListaClientesPageModule { }

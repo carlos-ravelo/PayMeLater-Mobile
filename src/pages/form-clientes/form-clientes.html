@@ -12,17 +12,17 @@
     <ion-title>Guardar Cliente</ion-title>
     <ion-buttons end>
       <button ion-button (click)="crearCliente()" icon-only>
-        <ion-icon name="add"></ion-icon>
+        <ion-icon name="person-add"></ion-icon>
       </button>
       <button ion-button icon-only (click)="seleccionarContacto()">
-        <ion-icon name="contact"></ion-icon>
+        <ion-icon name="search"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
-<ion-content padding>
+<ion-content>
   <div id="ListBackdrop" *ngIf="fabIsOpen" (click)="cerrarBackDrop()"></div>
-  <ion-fab right bottom #fab>
+  <!--   <ion-fab right bottom #fab>
     <button ion-fab color="primary" (click)="this.fabIsOpen = !this.fabIsOpen">
       <ion-icon name="arrow-dropup"></ion-icon>
     </button>
@@ -36,49 +36,56 @@
         <ion-icon name="person-add"></ion-icon>
       </button>
     </ion-fab-list>
-  </ion-fab>
+  </ion-fab> -->
+  <div class="contactItem" padding>
+    <ion-icon color="light" name="contact" md="ios-contact"></ion-icon>
+  </div>
+  <ion-card>
+    <ion-item>
+      <ion-label>Nombre</ion-label>
+      <ion-input [pattern]="nameRegex" type="text" [ngModel]="cliente.nombre" (ngModelChange)="cliente.nombre=capitalizeFirstLetter($event)"></ion-input>
+    </ion-item>
+  </ion-card>
+  <ion-card>
 
-  <ion-item>
-    <ion-label>Nombre</ion-label>
-    <ion-input type="text" [(ngModel)]="cliente.nombre" name="title"></ion-input>
-  </ion-item>
-  <ion-item-divider color="light">
-    Telefonos
-  </ion-item-divider>
-  <ion-item *ngFor="let telefono of cliente.telefonos;index as i;trackBy:identify">
-    <ion-select class="input-select" item-start name="tipo" [(ngModel)]="cliente.telefonos[i].tipo">
-      <ion-option>Celular</ion-option>
-      <ion-option>Casa</ion-option>
-    </ion-select>
-    <ion-input type="tel" item-end placeholder="Numero" name="numero" [(ngModel)]="cliente.telefonos[i].numero"></ion-input>
-    <ion-icon name="close" item-end (click)="cliente.telefonos.splice(i, 1)"></ion-icon>
-  </ion-item>
-  <button (click)="addTelefono()" ion-button color="primary" block>
-    Agregar Telefono
-  </button>
-  <ion-item-divider color="light">
-    Cuentas Bancarias
-  </ion-item-divider>
-  <ion-item *ngFor="let cuenta of cliente.cuentas;index as i;trackBy:identify">
-    <ion-select class="input-select" item-start placeholder="Banco" name="banco" [(ngModel)]="cuenta.banco">
-      <ion-option>Popular</ion-option>
-      <ion-option>Leon</ion-option>
-    </ion-select>
-    <ion-input item-end placeholder="Numero de Cuenta" name="numero" type="number" [(ngModel)]="cuenta.numero"></ion-input>
-    <ion-icon name="close" item-end (click)="cliente.cuentas.splice(i, 1)"></ion-icon>
-  </ion-item>
-  <button (click)="addCuenta()" ion-button color="primary" block>
-    Agregar Cuenta
-  </button>
-  <ion-item-divider color="light">
-    Emails
-  </ion-item-divider>
-  <ion-item *ngFor="let email of cliente.emails;index as i;trackBy:identify">
-    <ion-label>Email</ion-label>
-    <ion-input type="email" [(ngModel)]="cliente.emails[i]" name="title"></ion-input>
-    <ion-icon name="close" item-end (click)="cliente.emails.splice(i, 1)"></ion-icon>
-  </ion-item>
-  <button (click)="addEmail()" ion-button color="primary" block>
-    Agregar Correo
-  </button>
+    <ion-item-divider color="light">
+      Telefonos
+      <ion-icon item-end name="add" (click)="addTelefono()"></ion-icon>
+    </ion-item-divider>
+    <ion-item *ngFor="let telefono of cliente.telefonos;index as i;trackBy:identify">
+      <ion-select class="input-select" item-start name="tipo" [(ngModel)]="cliente.telefonos[i].tipo">
+        <ion-option>Celular</ion-option>
+        <ion-option>Casa</ion-option>
+      </ion-select>
+      <ion-input type="tel" item-end placeholder="Numero" name="numero" [(ngModel)]="cliente.telefonos[i].numero"></ion-input>
+      <ion-icon name="trash" item-end (click)="cliente.telefonos.splice(i, 1)"></ion-icon>
+    </ion-item>
+
+  </ion-card>
+  <ion-card>
+    <ion-item-divider color="light">
+      Cuentas Bancarias
+      <ion-icon item-end name="add" (click)="addCuenta()"></ion-icon>
+    </ion-item-divider>
+    <ion-item *ngFor="let cuenta of cliente.cuentas;index as i;trackBy:identify">
+      <ion-select class="input-select" item-start placeholder="Banco" name="banco" [(ngModel)]="cuenta.banco">
+        <ion-option>Popular</ion-option>
+        <ion-option>Leon</ion-option>
+      </ion-select>
+      <ion-input item-end placeholder="Numero de Cuenta" name="numero" type="number" [(ngModel)]="cuenta.numero"></ion-input>
+      <ion-icon name="trash" item-end (click)="cliente.cuentas.splice(i, 1)"></ion-icon>
+    </ion-item>
+  </ion-card>
+  <ion-card>
+    <ion-item-divider color="light">
+      Emails
+      <ion-icon item-end name="add" (click)="addEmail()"></ion-icon>
+    </ion-item-divider>
+    <ion-item *ngFor="let email of cliente.emails;index as i;trackBy:identify">
+      <ion-label>Email</ion-label>
+      <ion-input type="email" [(ngModel)]="cliente.emails[i]" name="title"></ion-input>
+      <ion-icon name="trash" item-end (click)="cliente.emails.splice(i, 1)"></ion-icon>
+    </ion-item>
+  </ion-card>
+  <div padding></div>
 </ion-content>
