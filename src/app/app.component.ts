@@ -14,6 +14,9 @@ import { ReportesPage } from '../pages/reportes/reportes'
 import { LoggedInfo } from '../clases/loggedInfo'
 import { AlertController } from 'ionic-angular';
 import { ReportesPorClientePage } from '../pages/reportes-por-cliente/reportes-por-cliente';
+import { ConfigurationsPage } from '../pages/configurations/configurations';
+import { LoanFilterPopOverPage } from '../pages/loan-filter-pop-over/loan-filter-pop-over';
+
 
 
 
@@ -33,14 +36,18 @@ export class MyApp {
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Clientes', component: ListaClientesPage, icon: 'people', color: "", class: "fas fa-users" },
+      { title: 'Clientes', component: ListaClientesPage, icon: '', color: "", class: "fas fa-users" },
       { title: 'Prestamos', component: ListaPrestamosPage, icon: '', color: "", class: "fas fa-university" },
       { title: 'Amortizaciones', component: AmortizacionesPage, icon: '', color: "", class: "fas fa-chart-line" },
+      { title: 'Configuraciones', component: ConfigurationsPage, icon: '', color: "", class: "fas fa-cogs" },
+      { title: 'Loan Filter', component: LoanFilterPopOverPage, icon: '', color: "", class: "fas fa-cogs" },
+
+
     ];
 
 
     this.reportesPages = [
-      { title: 'Reportes por mes', component: ReportesPage, icon: 'stats', color: "", class: "far fa-chart-bar" },
+      { title: 'Reportes por mes', component: ReportesPage, icon: '', color: "", class: "far fa-chart-bar" },
       { title: 'Reporte por Clientes', component: ReportesPorClientePage, icon: '', color: "", class: "fas fa-chart-pie" },
     ];
   }
@@ -62,7 +69,7 @@ export class MyApp {
       })
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      this.backgroundMode.enable();
+      // this.backgroundMode.enable();
       this.storage.get('loggedInfo').then((loggedInfo: LoggedInfo) => {
         if (!loggedInfo) {
           this.nav.setRoot(LoginPage)
@@ -109,6 +116,7 @@ export class MyApp {
   }
 
   openPage(page) {
+
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
     this.nav.setRoot(page.component);
@@ -118,4 +126,5 @@ export class MyApp {
     this.afAuth.auth.signOut();
     this.nav.setRoot(LoginPage)
   }
+
 }

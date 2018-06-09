@@ -98,6 +98,30 @@ export class AmortizacionesPage {
     });
     confirm.present();
   }
+  showConfirmDelete(calculation) {
+    let confirm = this.alertCtrl.create({
+      title: 'Borrar el calculo?',
+      message: '',
+
+
+      buttons: [
+
+        {
+          text: 'Cancelar',
+          role: "cancel",
+          handler: () => {
+          }
+        },
+        {
+          text: 'Borrar',
+          handler: () => {
+            this.deleteCalculation(calculation);
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
 
   getCalculationsList() {
     this.db.getLoanCalculations().subscribe((calculations) => {
@@ -118,14 +142,12 @@ export class AmortizacionesPage {
   loadCalculation(calculation) {
     this.prestamo = calculation;
     this.page = "addCalculation";
-    this.funcionesComunes.presentToast("Se cargo el calculo", 3000, "bottom")
+    this.funcionesComunes.presentToast("Se cargo el calculo" + this.prestamo.notas, 3000, "bottom")
 
   }
   openLoanDetails = (prestamo: Prestamo = this.prestamo): void => {
     if (prestamo.montoCuotas) {
       this.navCtrl.push(DetallePrestamoPage, { prestamo: prestamo, isamortization: true });
-      this.page = "savedCalculations";
-      this.clear();
     }
     else {
       this.funcionesComunes.presentToast("Los datos no son suficientes para el calculo", 3000, "bottom")

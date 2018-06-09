@@ -23,18 +23,21 @@ export class NotificationsPopOverPage {
   notificationDate: string;
   notificationTime: string;
   prestamo: Prestamo;
+  listaNotificaciones;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,
     private localNotifications: LocalNotifications, public funcionesComunes: FuncionesComunesProvider) {
   }
 
   ionViewDidLoad() {
-    //this.notificationDate = moment().format();
+    this.notificationTime = moment().format();
     console.log('ionViewDidLoad NotificationsPopOverPage');
     this.prestamo = this.navParams.get("prestamo")
     this.notificationDate = this.prestamo.fechaProximoPago;
     this.notificationTime = this.prestamo.fechaProximoPago;
-
+    this.localNotifications.getAll().then((listaNotificaciones) => {
+      this.listaNotificaciones = listaNotificaciones;
+    })
 
   }
   dismiss() {
@@ -47,10 +50,15 @@ export class NotificationsPopOverPage {
     let time = moment(hour + minute, "hhmm")
     let date = moment(this.notificationDate);
     let notificationDate = date.set({ "hour": time.get("hour"), "minute": time.get("minute") }).format()
+    if (date.set({ "hour": time.get("hour"), "minute": time.get("minute") }).diff(moment(), 'minutes') <= 0) {
+      this.funcionesComunes.presentToast("No se puede crear una alerta en tiempo pasado " + notificationDate, 3000, "bottom")
+
+      return
+    }
     this.localNotifications.schedule({
-      id: 1,
-      title: 'Notificacion de Prestamo',
-      text: this.prestamo.numeroPrestamo + " " + this.prestamo.cliente,
+      id: Number(this.prestamo.numeroPrestamo),
+      title: 'Notificacion de Prestamo: ' + this.prestamo.numeroPrestamo,
+      text: this.prestamo.cliente,
       trigger: { at: new Date(notificationDate) },
     });
     this.funcionesComunes.presentToast("se creo la alerta " + notificationDate, 3000, "bottom")

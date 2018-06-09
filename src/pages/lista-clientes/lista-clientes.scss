@@ -6,5 +6,10 @@ page-lista-clientes {
     .hidden{
         display: none
     }
-
+    .secondaryColor{
+        color:map-get($colors, secondary);
+    }
+    .toolbar-md {
+        padding: 0px;
+    }
 }

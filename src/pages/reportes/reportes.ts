@@ -109,7 +109,7 @@ export class ReportesPage {
       callbacks: {
         label: (tooltipItem, data) => {
           var label = data.labels[tooltipItem.index] || '';
-          label += ': ' + `${this.currencyPipe.transform(data.datasets[0].data[tooltipItem.index], null, null, "2.0-0")}`;
+          label += ': ' + `${this.currencyPipe.transform(data.datasets[0].data[tooltipItem.index], null, null, "2.2-2")}`;
           return label;
         }
       },
@@ -144,7 +144,7 @@ export class ReportesPage {
     },
     tooltips: {
       callbacks: {
-        label: (tooltipItem, data) => `${this.currencyPipe.transform(tooltipItem.yLabel, null, null, "2.0-0")}`
+        label: (tooltipItem, data) => `${this.currencyPipe.transform(tooltipItem.yLabel, null, null, "2.2-2")}`
       },
       custom: (tooltipModel) => {
 

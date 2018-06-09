@@ -34,6 +34,9 @@
       <ion-option>Capital Income</ion-option>
       <ion-option>Capital Outcome</ion-option>
     </ion-select>
+    <ion-select interface="popover" [(ngModel)]="selectedRange" (ionChange)="cambioDeRango($event)" placeholder="Select Range">
+      <ion-option [value]="rango" *ngFor="let rango of listaFechas">{{rango.nombre}}</ion-option>
+    </ion-select>
   </ion-item>
 
   <br>
