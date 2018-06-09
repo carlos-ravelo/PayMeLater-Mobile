@@ -1,4 +1,4 @@
-import { Component, } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy, } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { ProvidersDataProvider } from '../../providers/providers-data/providers-data'
 import { Cliente } from '../../clases/cliente'
@@ -22,7 +22,7 @@ import { Platform } from 'ionic-angular';
   selector: 'page-form-prestamos',
   templateUrl: 'form-prestamos.html',
 })
-export class FormPrestamosPage {
+export class FormPrestamosPage implements OnInit {
   listaCliente: Cliente[];
   prestamo: Prestamo;
   originalPrestamo: Prestamo;
@@ -52,6 +52,7 @@ export class FormPrestamosPage {
     };
     this.modificarOnuevo = this.esNuevoPrestamo ? "Insertar nuevo" : "Modificar"
   }
+
   getClientList(): void {
     this.data.obtenerClientes().subscribe(listaCliente => { this.listaCliente = listaCliente; });
   }

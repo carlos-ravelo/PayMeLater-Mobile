@@ -1,3 +1,6 @@
+
+
+ 
 page-login {
      ion-icon {
         font-size: 200px; //Preferred size here
@@ -6,5 +9,13 @@ page-login {
     .contactItem{
         text-align: center
     }
+    .vertical-center {
+        min-height: 90%;  /* Fallback for browsers do NOT support vh unit */
+        min-height: 90vh; /* These two lines are counted as one :-)       */
+      
+      }
 
+      .secondaryColored{
+          color: map-get($colors, secondary);
+      }
 }

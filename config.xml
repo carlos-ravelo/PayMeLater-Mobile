@@ -91,5 +91,6 @@
     <plugin name="cordova-sqlite-storage" spec="^2.3.1" />
     <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.2" />
     <allow-navigation href="http://192.168.1.15:8100" />
+    <plugin name="cordova-plugin-datepicker" spec="^0.9.3" />
     <engine name="android" spec="7.0.0" />
 </widget>

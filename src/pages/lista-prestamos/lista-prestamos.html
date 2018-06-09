@@ -17,17 +17,23 @@
       <button ion-button icon-only (click)="displaySearch()" [ngClass]="{'hidden': fromClientsDetail}">
         <ion-icon name="search"></ion-icon>
       </button>
+      <button ion-button icon-only (click)="openNotificarionsPage()">
+        <ion-icon name="notifications"></ion-icon>
+      </button>
       <!--       <button ion-button icon-only>
         <ion-icon name="options"></ion-icon>
       </button> -->
     </ion-buttons>
   </ion-navbar>
-  <ion-toolbar color="light">
+  <ion-toolbar>
     <ion-item>
       <p>
         <b>Total capital Pendiente: </b>{{totalLoans|currency}}</p>
       <p>
         <b>Total interes mensual: </b>{{totalInteresMensual|currency}}</p>
+      <button item-end ion-button (click)="openFilterPopOver($event)" icon-only clear>
+        <ion-icon name="funnel"></ion-icon>
+      </button>
     </ion-item>
   </ion-toolbar>
 </ion-header>
@@ -48,20 +54,27 @@
       Prestamos activos
     </ion-list-header>
     <ion-item-sliding #item *ngFor="let prestamo of filteredListaPrestamos">
-      <button ion-item (click)="irDetallePrestamo($event,prestamo)">
-        <ion-icon name="cash" color="secondary"></ion-icon>
-        <label> {{prestamo.numeroPrestamo}}</label>
-        <br>
-        <label [ngClass]="{'atraso':estaEnAtraso(prestamo.fechaProximoPago),aTiempo:!estaEnAtraso(prestamo.fechaProximoPago)}">
-          {{prestamo.fechaProximoPago|date}}</label>
-        <span *ngIf="!prestamo.fechaProximoPago" class=" ">Completado</span>
-        <div class="item-note" item-end>
-          {{prestamo.cliente}}
+      <ion-item>
+        <span (click)="irDetallePrestamo($event,prestamo)">
+          <ion-icon name="cash" color="secondary"></ion-icon>
+          <label> {{prestamo.numeroPrestamo}}</label>
+          <br>
+          <label [ngClass]="{'atraso':estaEnAtraso(prestamo.fechaProximoPago),aTiempo:!estaEnAtraso(prestamo.fechaProximoPago)}">
+            {{prestamo.fechaProximoPago|date}}</label>
+          <span *ngIf="!prestamo.fechaProximoPago" class=" ">Completado</span>
+        </span>
+        <div class="item-note" (click)="irDetallePrestamo($event,prestamo)" item-end>
+          <b> {{prestamo.cliente}}
+          </b>
           <br> {{prestamo.capitalPendiente|currency}}
+
         </div>
-      </button>
+        <ion-icon color="primary" *ngIf="hasNotif(prestamo.numeroPrestamo)" (click)="openNotificarionsPageFiltered(prestamo.numeroPrestamo)"
+          item-end name="notifications"></ion-icon>
+        <ion-icon color="primary" *ngIf="!hasNotif(prestamo.numeroPrestamo)" (click)="showDatePicker($event,prestamo)" item-end name="notifications-off"></ion-icon>
+      </ion-item>
       <ion-item-options side="left">
-        <button ion-button expandable (click)="showPressMenu($event,prestamo);item.close()">Reminder
+        <button ion-button expandable (click)="showNotificationMenu($event,prestamo);item.close()">Reminder
           <ion-icon name="time"></ion-icon>
         </button>
       </ion-item-options>

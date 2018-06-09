@@ -29,17 +29,20 @@
   <h2>{{cliente.nombre}}</h2>
   <ion-card>
     <ion-item-divider color="light">Telefonos:</ion-item-divider>
-    <ion-item>No hay telefonos disponibles</ion-item>
+    <ion-item *ngIf="cliente.telefonos?.length==0">No hay telefonos disponibles</ion-item>
     <ion-list>
       <ion-item-sliding *ngFor='let telefono of cliente.telefonos;index as i'>
         <ion-item>
           <ion-icon name="call" item-start (click)="llamarAnumero(telefono.numero)"></ion-icon>
-          {{telefono.tipo}}
+          <p> {{telefono.tipo}}
+          </p>
           <div class="item-note" *ngIf="!telefono.numero">
-            {{telefono}}
+            <p> {{telefono}}
+            </p>
           </div>
           <div class="item-note" *ngIf="telefono.numero">
-            {{telefono.numero}}
+            <p> {{telefono.numero}}
+            </p>
           </div>
           <ion-icon name="copy" item-end (click)="copiarAlClipboard(telefono.numero)"></ion-icon>
         </ion-item>
@@ -61,14 +64,15 @@
   </ion-card>
   <ion-card>
     <ion-item-divider color="light">Cuentas:</ion-item-divider>
-    <ion-item>No hay Cuentas disponibles</ion-item>
+    <ion-item *ngIf="cliente.cuentas?.length==0">No hay Cuentas disponibles</ion-item>
     <ion-list>
       <ion-item-sliding *ngFor='let cuenta of cliente.cuentas;index as i'>
         <ion-item>
           <ion-icon name="share" item-start (click)="share(cuenta.banco +' '+ cuenta.numero)"></ion-icon>
           {{cuenta.banco}}:
           <div class="item-note">
-            {{cuenta.numero}}
+            <p> {{cuenta.numero}}
+            </p>
           </div>
           <ion-icon name="copy" item-end (click)="copiarAlClipboard(cuenta.numero)"></ion-icon>
         </ion-item>
@@ -88,9 +92,10 @@
   </ion-card>
   <ion-card>
     <ion-item-divider color="light">Emails:</ion-item-divider>
-    <ion-item>No hay Correos disponibles</ion-item>
+    <ion-item *ngIf="cliente.emails?.length==0">No hay Correos disponibles</ion-item>
     <ion-item *ngFor="let email of cliente.emails">
-      {{email}}
+      <p> {{email}}
+      </p>
       <ion-icon name="send" item-start (click)="sendEmail(email)"> </ion-icon>
       <ion-icon name="copy" item-end (click)="copiarAlClipboard(email)"></ion-icon>
     </ion-item>
