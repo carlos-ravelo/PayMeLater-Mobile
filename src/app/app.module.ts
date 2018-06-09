@@ -22,6 +22,11 @@ import { AmortizacionesPageModule } from '../pages/amortizaciones/amortizaciones
 import { ReportesPageModule } from '../pages/reportes/reportes.module'
 import { NotificationsPopOverPageModule } from '../pages/notifications-pop-over/notifications-pop-over.module'
 import { ReportesPorClientePageModule } from '../pages/reportes-por-cliente/reportes-por-cliente.module'
+import { ConfigurationsPageModule } from '../pages/configurations/configurations.module'
+import { NotificationsPageModule } from '../pages/notifications/notifications.module'
+import { LoanFilterPopOverPageModule } from '../pages/loan-filter-pop-over/loan-filter-pop-over.module'
+
+
 
 
 //Firebase
@@ -51,7 +56,7 @@ import { DatePipe, CurrencyPipe, TitleCasePipe } from '@angular/common';
 import { IonicStorageModule } from '@ionic/storage';
 import { ChartsModule } from 'ng2-charts';
 import { LocalNotifications } from '@ionic-native/local-notifications';
-
+import { DatePicker } from '@ionic-native/date-picker';
 
 
 @NgModule({
@@ -73,7 +78,9 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
     DetalleClientePageModule,
     FormClientesPageModule,
     FormPrestamosPageModule,
-    FormMovimientoPageModule, ReportesPageModule, AmortizacionesPageModule, ChartsModule, NotificationsPopOverPageModule, ReportesPorClientePageModule
+    FormMovimientoPageModule, ReportesPageModule, AmortizacionesPageModule,
+    ChartsModule, NotificationsPopOverPageModule, ReportesPorClientePageModule,
+    ConfigurationsPageModule, NotificationsPageModule, LoanFilterPopOverPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -91,7 +98,8 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
     Clipboard,
     CallNumber,
     BackgroundMode,
-    Contacts, SocialSharing, EmailComposer, DatePipe, CurrencyPipe, LocalNotifications, TitleCasePipe
+    Contacts, SocialSharing, EmailComposer, DatePipe, CurrencyPipe, LocalNotifications, TitleCasePipe, DatePicker,
+
   ]
 })
 export class AppModule { }

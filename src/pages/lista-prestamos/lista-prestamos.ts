@@ -10,6 +10,14 @@ import { FuncionesComunesProvider } from '../../providers/funciones-comunes/func
 import { PopoverController } from 'ionic-angular';
 import { NotificationsPopOverPage } from '../notifications-pop-over/notifications-pop-over'
 
+import { NotificationsPage } from '../notifications/notifications'
+import { LoanFilterPopOverPage } from '../loan-filter-pop-over/loan-filter-pop-over'
+
+import { LocalNotifications } from '@ionic-native/local-notifications';
+import { DatePicker } from '@ionic-native/date-picker';
+import { DatePipe } from '@angular/common';
+
+
 
 /**
  * Generated class for the ListaPrestamosPage page.
@@ -37,10 +45,14 @@ export class ListaPrestamosPage implements OnInit {
   filterWord: string = '';
   showSearch: boolean = false;
   fromClientsDetail: boolean = false;
+  notificationList: Array<number>;
+
 
   constructor(public afAuth: AngularFireAuth, public db: AngularFirestore, public navCtrl: NavController,
     public navParams: NavParams, public data: ProvidersDataProvider, public funcionesComunes: FuncionesComunesProvider
-    , public popoverCtrl: PopoverController) {
+    , public popoverCtrl: PopoverController, private localNotifications: LocalNotifications, private datePicker: DatePicker,
+    public datepipe: DatePipe
+  ) {
   }
   ionViewDidLoad() {
     this.data.obtenerPrestamos()
@@ -57,7 +69,45 @@ export class ListaPrestamosPage implements OnInit {
     console.log('ionViewDidLoad ListaPrestamosPage');
   }
   ngOnInit() {
+
+    this.getNotifications();
     this.filterWord = this.navParams.get("filterWord") || '';
+    this.localNotifications.on("add").subscribe(() => this.getNotifications())
+    this.localNotifications.on("cancel").subscribe(() => this.getNotifications())
+  }
+  showDatePicker(event, prestamo) {
+    this.datePicker.show({
+      date: new Date(),
+      mode: 'datetime',
+      minDate: new Date(),
+      todayText: "Hoy",
+      allowOldDates: false,
+      androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_LIGHT
+    }).then(
+      date => { this.createNotification(date, prestamo); },
+      err => console.log('Error occurred while getting date: ', err)
+    );
+  }
+
+  createNotification(date: Date, prestamo) {
+    if (date.getTime() < new Date().getTime()) {
+      this.funcionesComunes.presentToast("Seleccione una fecha futura", 3000, "bottom")
+      return
+    }
+    this.localNotifications.schedule({
+      id: Number(prestamo.numeroPrestamo),
+      title: 'Notificacion de Prestamo: ' + prestamo.numeroPrestamo,
+      text: prestamo.cliente,
+      trigger: { at: date },
+    });
+    this.funcionesComunes.presentToast("Se creo la alerta " + this.datepipe.transform(date, 'medium'), 3000, "bottom")
+
+  }
+  getNotifications() {
+    this.localNotifications.getScheduledIds().then((notificationList) => {
+      this.notificationList = notificationList
+    })
+
   }
 
   irDetallePrestamo = (event, prestamo): void => {
@@ -92,10 +142,12 @@ export class ListaPrestamosPage implements OnInit {
     this.filteredCompletedListaPrestamos = this.funcionesComunes.filterArray(this.completedListaPrestamos, query);
     this.calcularEncabezado();
   }
-  showPressMenu(event, prestamo) {
+  showNotificationMenu(event, prestamo) {
     let notificationPopOver = this.popoverCtrl.create(NotificationsPopOverPage,
       { prestamo: prestamo });
     notificationPopOver.present({ ev: event, animate: true });
+    notificationPopOver.onDidDismiss(() => { this.getNotifications() })
+
   }
   displaySearch() {
     this.filterWord = "";
@@ -113,6 +165,29 @@ export class ListaPrestamosPage implements OnInit {
     setTimeout(() => {
       this.search.setFocus();
     }, 50);
+  }
+  openNotificarionsPage() {
+    this.navCtrl.push(NotificationsPage);
+  }
+  openNotificarionsPageFiltered(notification) {
+    this.navCtrl.push(NotificationsPage, { notification: Number(notification) })
+  }
+  hasNotif(numeroPrestamo): boolean {
+    if (this.notificationList.indexOf(Number(numeroPrestamo)) >= 0) {
+      return true
+    } return false;
+
+  }
+
+  openFilterPopOver(event) {
+    let popOver = this.popoverCtrl.create(LoanFilterPopOverPage);
+    popOver.present({ ev: event });
+    popOver.onDidDismiss((filterCondicions) => {
+      alert(filterCondicions)
+
+    })
+
+
   }
 
 }

@@ -9,13 +9,15 @@
       <ion-item-divider color="light">Modulos</ion-item-divider>
 
       <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
-        <ion-icon [color]="p.color" [class]="p.class" item-start [name]="p.icon"></ion-icon>
+        <ion-icon *ngIf="p.icon!=''" [color]="p.color" item-start [name]="p.icon"></ion-icon>
+        <ion-icon *ngIf="p.class!=''" [class]="p.class" item-start></ion-icon>
         {{p.title}}
       </button>
       <br>
       <ion-item-divider color="light">Reportes</ion-item-divider>
       <button menuClose ion-item *ngFor="let p of reportesPages" (click)="openPage(p)">
-        <ion-icon [color]="p.color" [class]="p.class" item-start [name]="p.icon"></ion-icon>
+        <ion-icon *ngIf="p.icon!=''" [color]="p.color" item-start [name]="p.icon"></ion-icon>
+        <ion-icon *ngIf="p.class!=''" [class]="p.class" item-start></ion-icon>
         {{p.title}}
       </button>
       <br>

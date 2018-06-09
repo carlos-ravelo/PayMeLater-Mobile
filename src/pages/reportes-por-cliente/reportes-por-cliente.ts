@@ -5,7 +5,8 @@ import { Movimiento } from '../../clases/movimiento'
 import { CurrencyPipe } from '@angular/common'
 import { FuncionesComunesProvider } from '../../providers/funciones-comunes/funciones-comunes'
 import { ListaPrestamosPage } from '../lista-prestamos/lista-prestamos'
-
+import { dateList } from '../../app/appConstantsAndConfig'
+import * as moment from 'moment'
 
 /**
  * Generated class for the ReportesPorClientePage page.
@@ -25,23 +26,40 @@ export class ReportesPorClientePage implements OnInit {
   totals: totals;
   listaMovimientos: Movimiento[];
   dataSource: string = "Interest Income";
-  dateStart: string = "2017-12-25";
-  dateEnd: string = "2018-05-25";
+  dateStart: string = dateList[0].fechaInicial;
+  dateEnd: string = dateList[0].fechaFinal;
   doughnutChartLabels = ['Interest Income ', 'Capital Income ', 'Capital Outcome'];
   doughnutChartData;
+  listaFechas = dateList.slice();
+  selectedRange;
+
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public funcionesComunes: FuncionesComunesProvider, public db: ProvidersDataProvider, public currencyPipe: CurrencyPipe) {
   }
   ngOnInit(): void {
-    this.getMovementsByRange("2017-12-25", "2018-05-25")
+    this.listaFechas.unshift({ nombre: "Este mes", fechaInicial: moment().startOf("month").format('YYYY-MM-DD'), fechaFinal: moment().endOf("month").format('YYYY-MM-DD') },
+      { nombre: "Mes pasado", fechaInicial: moment().subtract(1, "month").startOf("month").format('YYYY-MM-DD'), fechaFinal: moment().subtract(1, "month").endOf("month").format('YYYY-MM-DD') },
+    );
+    this.getMovementsByRange(this.dateStart, this.dateEnd)
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-
   }
-  cambioDeFechas(event, tipo) {
+  cambioDeFechas(event: string, tipo) {
+    this.selectedRange = { nombre: "Custom", fechaInicial: "", fechaFinal: "" };
+
     if (tipo == "fechaInicio") { this.getMovementsByRange(event, this.dateEnd); }
     else { this.getMovementsByRange(this.dateStart, event); }
+
+  }
+  cambioDeRango(event: { nombre: string, fechaInicial: string, fechaFinal: string }) {
+
+    if (event.nombre == "Custom") { return }
+    this.dateStart = event.fechaInicial;
+    this.dateEnd = event.fechaFinal;
+    this.getMovementsByRange(this.dateStart, this.dateEnd)
+
+
   }
 
   calculatePercentage(val: number) {
@@ -142,8 +160,8 @@ export class ReportesPorClientePage implements OnInit {
 
       })
   }
-  getMovementsByRange(dateStart, dateEnd) {
-    this.db.obtenerMovimientosByLapse(dateStart, dateEnd).subscribe((listamovimientos) => {
+  getMovementsByRange(dateStart: string, dateEnd: string) {
+    this.db.obtenerMovimientosByLapse(dateStart.substr(0, 10), dateEnd.substr(0, 10)).subscribe((listamovimientos) => {
       this.listaMovimientos = listamovimientos;
 
       this.calculateGraphyc1();
@@ -160,7 +178,7 @@ export class ReportesPorClientePage implements OnInit {
       callbacks: {
         label: (tooltipItem, data) => {
           var label = data.labels[tooltipItem.index] || '';
-          label += ': ' + `${this.currencyPipe.transform(data.datasets[0].data[tooltipItem.index], null, null, "2.0-0")}`;
+          label += ': ' + `${this.currencyPipe.transform(data.datasets[0].data[tooltipItem.index], null, null, "2.2-2")}`;
           return label;
         }
       },
