@@ -19,6 +19,8 @@ import { MenuController } from 'ionic-angular';
   templateUrl: 'login.html',
 })
 export class LoginPage {
+  model: any = {};
+  loading = false;
   username: string = "";
   password: string = "";
   constructor(public nav: NavController, public navParams: NavParams,
@@ -34,10 +36,10 @@ export class LoginPage {
       content: 'Please wait...'
     });
     loading.present();
-    this.afAuth.auth.signInWithEmailAndPassword(this.username, this.password).then(() => {
-      this.storage.set('loggedInfo', { account: this.username.toLowerCase(), logged: true }).then(a => {
+    this.afAuth.auth.signInWithEmailAndPassword(this.model.username, this.model.password).then(() => {
+      this.storage.set('loggedInfo', { account: this.model.username.toLowerCase(), logged: true }).then(a => {
         loading.dismiss();
-        this.db.loggedAccount = this.username.toLowerCase();
+        this.db.loggedAccount = this.model.username.toLowerCase();
         this.nav.setRoot(ReportesPage);
         this.menu.enable(true)
       }

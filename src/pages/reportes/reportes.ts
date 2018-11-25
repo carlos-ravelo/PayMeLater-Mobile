@@ -78,7 +78,6 @@ export class ReportesPage {
       this.doughnutChartData = [this.totals.interest, this.totals.capitalIncome, this.totals.capitalOutcome];
       this.doughnutChartType = 'doughnut';
       this.showBars(moment(dateStart), moment(dateEnd));
-      // this.db.db.firestore.enableNetwork();
     })
   }
   calculateTotals(listaMovimientos: Movimiento[] = this.listaMovimientos) {

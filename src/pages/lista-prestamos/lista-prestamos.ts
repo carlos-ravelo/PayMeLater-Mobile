@@ -8,13 +8,8 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { FuncionesComunesProvider } from '../../providers/funciones-comunes/funciones-comunes';
 import { PopoverController } from 'ionic-angular';
-import { NotificationsPopOverPage } from '../notifications-pop-over/notifications-pop-over'
-
 import { NotificationsPage } from '../notifications/notifications'
 import { LoanFilterPopOverPage } from '../loan-filter-pop-over/loan-filter-pop-over'
-
-import { LocalNotifications } from '@ionic-native/local-notifications';
-import { DatePicker } from '@ionic-native/date-picker';
 import { DatePipe } from '@angular/common';
 
 
@@ -50,8 +45,7 @@ export class ListaPrestamosPage implements OnInit {
 
   constructor(public afAuth: AngularFireAuth, public db: AngularFirestore, public navCtrl: NavController,
     public navParams: NavParams, public data: ProvidersDataProvider, public funcionesComunes: FuncionesComunesProvider
-    , public popoverCtrl: PopoverController, private localNotifications: LocalNotifications, private datePicker: DatePicker,
-    public datepipe: DatePipe
+    , public popoverCtrl: PopoverController, public datepipe: DatePipe
   ) {
   }
   ionViewDidLoad() {
@@ -70,12 +64,12 @@ export class ListaPrestamosPage implements OnInit {
   }
   ngOnInit() {
 
-    this.getNotifications();
+    //this.getNotifications();
     this.filterWord = this.navParams.get("filterWord") || '';
-    this.localNotifications.on("add").subscribe(() => this.getNotifications())
-    this.localNotifications.on("cancel").subscribe(() => this.getNotifications())
+    //this.localNotifications.on("add").subscribe(() => this.getNotifications())
+    //this.localNotifications.on("cancel").subscribe(() => this.getNotifications())
   }
-  showDatePicker(event, prestamo) {
+  /* showDatePicker(event, prestamo) {
     this.datePicker.show({
       date: new Date(),
       mode: 'datetime',
@@ -88,27 +82,27 @@ export class ListaPrestamosPage implements OnInit {
       err => console.log('Error occurred while getting date: ', err)
     );
   }
-
-  createNotification(date: Date, prestamo) {
-    if (date.getTime() < new Date().getTime()) {
-      this.funcionesComunes.presentToast("Seleccione una fecha futura", 3000, "bottom")
-      return
-    }
-    this.localNotifications.schedule({
-      id: Number(prestamo.numeroPrestamo),
-      title: 'Notificacion de Prestamo: ' + prestamo.numeroPrestamo,
-      text: prestamo.cliente,
-      trigger: { at: date },
-    });
-    this.funcionesComunes.presentToast("Se creo la alerta " + this.datepipe.transform(date, 'medium'), 3000, "bottom")
-
-  }
-  getNotifications() {
-    this.localNotifications.getScheduledIds().then((notificationList) => {
-      this.notificationList = notificationList
-    })
-
-  }
+ */
+  /*   createNotification(date: Date, prestamo) {
+      if (date.getTime() < new Date().getTime()) {
+        this.funcionesComunes.presentToast("Seleccione una fecha futura", 3000, "bottom")
+        return
+      }
+      this.localNotifications.schedule({
+        id: Number(prestamo.numeroPrestamo),
+        title: 'Notificacion de Prestamo: ' + prestamo.numeroPrestamo,
+        text: prestamo.cliente,
+        trigger: { at: date },
+      });
+      this.funcionesComunes.presentToast("Se creo la alerta " + this.datepipe.transform(date, 'medium'), 3000, "bottom")
+  
+    } */
+  /*  getNotifications() {
+     this.localNotifications.getScheduledIds().then((notificationList) => {
+       this.notificationList = notificationList
+     })
+ 
+   } */
 
   irDetallePrestamo = (event, prestamo): void => {
     this.navCtrl.push(DetallePrestamoPage, { prestamo: prestamo }).then(() => {
@@ -122,7 +116,7 @@ export class ListaPrestamosPage implements OnInit {
   }
   estaEnAtraso = (fecha): boolean => { return new Date(fecha) <= new Date(); }
   abrirInsertarPrestamo = (): void => {
-    this.navCtrl.push(FormPrestamosPage, );
+    this.navCtrl.push(FormPrestamosPage);
     if (this.fromClientsDetail) {
       //this.showSearch = false;
     } else {// this.hideSearch() 
@@ -142,13 +136,13 @@ export class ListaPrestamosPage implements OnInit {
     this.filteredCompletedListaPrestamos = this.funcionesComunes.filterArray(this.completedListaPrestamos, query);
     this.calcularEncabezado();
   }
-  showNotificationMenu(event, prestamo) {
-    let notificationPopOver = this.popoverCtrl.create(NotificationsPopOverPage,
-      { prestamo: prestamo });
-    notificationPopOver.present({ ev: event, animate: true });
-    notificationPopOver.onDidDismiss(() => { this.getNotifications() })
-
-  }
+  /*   showNotificationMenu(event, prestamo) {
+      let notificationPopOver = this.popoverCtrl.create(NotificationsPopOverPage,
+        { prestamo: prestamo });
+      notificationPopOver.present({ ev: event, animate: true });
+      notificationPopOver.onDidDismiss(() => { this.getNotifications() })
+  
+    } */
   displaySearch() {
     this.filterWord = "";
     this.showSearch = true;
@@ -169,8 +163,10 @@ export class ListaPrestamosPage implements OnInit {
   openNotificarionsPage() {
     this.navCtrl.push(NotificationsPage);
   }
-  openNotificarionsPageFiltered(notification) {
-    this.navCtrl.push(NotificationsPage, { notification: Number(notification) })
+  openNotificarionsPageFiltered(event, notification) {
+    let popover = this.popoverCtrl.create(NotificationsPage, { notification: Number(notification) });
+    popover.present({})
+    //    this.navCtrl.push(NotificationsPage, { notification: Number(notification) })
   }
   hasNotif(numeroPrestamo): boolean {
     if (this.notificationList.indexOf(Number(numeroPrestamo)) >= 0) {
@@ -183,7 +179,7 @@ export class ListaPrestamosPage implements OnInit {
     let popOver = this.popoverCtrl.create(LoanFilterPopOverPage);
     popOver.present({ ev: event });
     popOver.onDidDismiss((filterCondicions) => {
-      alert(filterCondicions)
+      alert(JSON.stringify(filterCondicions))
 
     })
 

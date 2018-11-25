@@ -3,7 +3,6 @@ import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { BackgroundMode } from '@ionic-native/background-mode';
 import { LoginPage } from '../pages/login/login';
 import { ListaPrestamosPage } from '../pages/lista-prestamos/lista-prestamos';
 import { ListaClientesPage } from '../pages/lista-clientes/lista-clientes';
@@ -15,7 +14,6 @@ import { LoggedInfo } from '../clases/loggedInfo'
 import { AlertController } from 'ionic-angular';
 import { ReportesPorClientePage } from '../pages/reportes-por-cliente/reportes-por-cliente';
 import { ConfigurationsPage } from '../pages/configurations/configurations';
-import { LoanFilterPopOverPage } from '../pages/loan-filter-pop-over/loan-filter-pop-over';
 
 
 
@@ -30,7 +28,8 @@ export class MyApp {
   alert: any;
 
   constructor(public afAuth: AngularFireAuth, public platform: Platform, public statusBar: StatusBar,
-    public splashScreen: SplashScreen, private backgroundMode: BackgroundMode, private storage: Storage,
+    public splashScreen: SplashScreen,
+    private storage: Storage,
     private db: ProvidersDataProvider, private alertCtrl: AlertController) {
     this.initializeApp();
 
@@ -40,8 +39,8 @@ export class MyApp {
       { title: 'Prestamos', component: ListaPrestamosPage, icon: '', color: "", class: "fas fa-university" },
       { title: 'Amortizaciones', component: AmortizacionesPage, icon: '', color: "", class: "fas fa-chart-line" },
       { title: 'Configuraciones', component: ConfigurationsPage, icon: '', color: "", class: "fas fa-cogs" },
-      { title: 'Loan Filter', component: LoanFilterPopOverPage, icon: '', color: "", class: "fas fa-cogs" },
-
+      /*       { title: 'Loan Filter', component: LoanFilterPopOverPage, icon: '', color: "", class: "fas fa-cogs" },
+       */
 
     ];
 
@@ -57,6 +56,9 @@ export class MyApp {
 
         if (this.nav.canGoBack()) {
           this.nav.pop();
+        }
+        else if (!(this.nav.getActive().instance instanceof ReportesPage)) {
+          this.nav.setRoot(ListaPrestamosPage)
         }
         else {
           if (this.alert) {
@@ -78,8 +80,7 @@ export class MyApp {
         }
         else if (loggedInfo.logged) {
           this.db.loggedAccount = loggedInfo.account;
-          this.db.db.firestore.disableNetwork();
-          this.nav.setRoot(ReportesPage)
+          this.nav.setRoot(ListaPrestamosPage);
           console.log('Is Logged', loggedInfo.logged, loggedInfo.account);
 
         }

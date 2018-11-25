@@ -165,7 +165,7 @@ export class ReportesPorClientePage implements OnInit {
       this.listaMovimientos = listamovimientos;
 
       this.calculateGraphyc1();
-      this.db.db.firestore.enableNetwork();
+      // this.db.db.firestore.enableNetwork();
     })
   }
   cambioDeChart(event) {

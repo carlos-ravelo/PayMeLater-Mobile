@@ -68,7 +68,8 @@
       <ion-item>
         <ion-icon item-start>%</ion-icon>
         <ion-label>Tasa</ion-label>
-        <ion-input text-right (blur)="calculateAmountOfFee()" type="number" placeholder="Tasa" name="tasa" [(ngModel)]="prestamo.tasa"></ion-input>
+        <ion-input text-right (blur)="calculateAmountOfFee()" type="number" placeholder="Tasa" name="tasa" (ngModelChange)="prestamo.tasa = convertToNumber($event)"
+          [ngModel]="prestamo.tasa"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>Tipo Tasa</ion-label>
@@ -83,7 +84,8 @@
         <ion-label>Cantidad de cuotas</ion-label>
         <ion-icon item-start name="time"></ion-icon>
 
-        <ion-input text-right (blur)="calculateAmountOfFee()" type="number" placeholder="" name="cantidadCuotas" [(ngModel)]="prestamo.cantidadCuotas"></ion-input>
+        <ion-input (ngModelChange)="prestamo.cantidadCuotas = convertToNumber($event)" text-right (blur)="calculateAmountOfFee()"
+          type="number" placeholder="" name="cantidadCuotas" [ngModel]="prestamo.cantidadCuotas"></ion-input>
       </ion-item>
       <!--
       <ion-item>
