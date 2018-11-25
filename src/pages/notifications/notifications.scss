@@ -2,5 +2,7 @@ page-notifications {
     .selected{
         border: 1px solid gray;
     }
-
+    .hidden{
+        display: none
+    }
 }

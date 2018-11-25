@@ -154,5 +154,9 @@ export class AmortizacionesPage {
     }
 
   }
+
+  convertToNumber(event): number {
+    return +event;
+  }
 }
 
