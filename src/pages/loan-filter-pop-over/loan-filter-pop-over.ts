@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
-import { filter } from 'rxjs/operator/filter';
-import { Prestamo } from '../../clases/prestamo'
 
 
 /**
@@ -17,7 +15,7 @@ import { Prestamo } from '../../clases/prestamo'
   templateUrl: 'loan-filter-pop-over.html',
 })
 export class LoanFilterPopOverPage {
-  filterCondition: any = { property: "" };
+  filterCondition: { property: string, condition: string, value: string | number } = { condition: "", property: "", value: "" };
   listOfpropertiesToFilter = ["Estado", "Tasa", "Tipo Tasa", "Capital Prestado", "Fecha Proximo Pago", "Fecha Inicio", "Capital pendiente"];
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController) {
   }

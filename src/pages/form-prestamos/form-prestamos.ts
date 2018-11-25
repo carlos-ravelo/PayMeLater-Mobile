@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, OnDestroy, } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { ProvidersDataProvider } from '../../providers/providers-data/providers-data'
 import { Cliente } from '../../clases/cliente'

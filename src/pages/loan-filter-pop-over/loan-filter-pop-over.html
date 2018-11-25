@@ -25,18 +25,18 @@
 
   <div [ngSwitch]="filterCondition.property">
     <ion-item *ngSwitchCase="'Tasa'">
-      <ion-select class="input-select" placeholder="Condicion">
-        <ion-option>
+      <ion-select class="input-select" [(ngModel)]="filterCondition.condition" placeholder="Condicion">
+        <ion-option value="'igual'">
           Igual
         </ion-option>
-        <ion-option>
+        <ion-option value="'mayorOIgual'">
           Mayor o igual
         </ion-option>
-        <ion-option>
+        <ion-option value="'menorOigual'">
           Menor o igual
         </ion-option>
       </ion-select>
-      <ion-input text-right type="number">
+      <ion-input [(ngModel)]="filterCondition.value" text-right type="number">
       </ion-input>
     </ion-item>
 

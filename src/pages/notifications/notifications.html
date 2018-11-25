@@ -14,7 +14,7 @@
 
 
 <ion-content padding>
-  <ion-item *ngFor="let notif of notificationList" [ngClass]="{'selected': notif.id == currentNotification }">
+  <ion-item *ngFor="let notif of notificationList" [ngClass]="{'hidden': notif.id != currentNotification }">
     <p> {{notif.title}}
     </p>
     <p>{{notif.text}}</p>

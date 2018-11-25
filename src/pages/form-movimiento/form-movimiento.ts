@@ -34,7 +34,6 @@ export class FormMovimientoPage {
     this.esNuevoMovimiento = this.navParams.get("esNuevoMovimiento");
     if (this.navParams.get("movimiento")) { this.movimiento = { ... this.navParams.get("movimiento") } }
     else { this.clear() };
-    //this.formatDateToForm();
     this.tiposDeMovimiento = this.movimiento.tipoMovimiento == "inicial" ? ["inicial"] : ["pago", "desembolso"];
     this.modificarOnuevoLabel = this.esNuevoMovimiento ? "Insertar nuevo" : "Modificar"
   }
@@ -89,7 +88,7 @@ export class FormMovimientoPage {
       this.prestamo.montoCuotas = this.funcionesComunes.calculateAmountOfFee(this.prestamo);
       this.prestamo.capitalPendiente = valoresCalculados.capitalPendiente;
       let a = moment(this.movimiento.fechaCorrespondiente);
-      if (this.esNuevoMovimiento) this.prestamo.fechaProximoPago = a.add(1, 'month').format('YYYY-MM-DD');
+      if (this.esNuevoMovimiento && this.movimiento.tipoMovimiento=="pago") this.prestamo.fechaProximoPago = a.add(1, 'month').format('YYYY-MM-DD');
       this.prestamo.estado = this.prestamo.capitalPendiente <= 0 ? "completado" : 'activo';
       if (this.prestamo.capitalPendiente <= 0) { this.prestamo.fechaProximoPago = null }
       this.data.modificarPrestamo(this.prestamo);

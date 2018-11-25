@@ -13,6 +13,7 @@ export class Prestamo {
         public pagadoCapital: number,
         public capitalPendiente: number,
         public notas?: string,
+        public autoCalculate?: boolean,
     ) { }
 }
 
